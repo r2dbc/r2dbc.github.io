@@ -13,7 +13,11 @@ From the same conference, see Ben Hale go into details of what reactive relation
 
 <iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/idApf9DMdfk" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
 
+# Explore
 
-## Community is Key
+Feel free to check out this site. Learn about building [drivers](/drivers), creating and using [clients](/clients), testing with examples, and the power of reactive streams itself.
+
+
+# Community is Key
 
 While led by members of the Spring team at Pivotal, R2DBC depends upon community support. That's why contributors from all relational data stores are invited to participate in building a reactive future.
