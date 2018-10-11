@@ -3,8 +3,6 @@ title: Home
 layout: default
 ---
 
-# Introduction
-
 R2DBC is an endeavor to bring reactive programming to relational data stores. It was first announced at SpringOne Platform 2018, as shown in the keynote below:
 
 <iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/E3s5f-JF8z4?start=520" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
