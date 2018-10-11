@@ -13,6 +13,23 @@ R2DBC has a clearly defined **SPI** you must implement to host a solution for yo
 * Group: **io.r2dbc**
 * Artifact: **r2dbc-spi**
 
+The key interface all driver providers must implements is the `Connection` as shown below:
+
+```
+Publisher<Void> beginTransaction();
+Publisher<Void> close();
+Publisher<Void> commitTransaction();
+Batch createBatch();
+Publisher<Void> createSavepoint(String name);
+Statement createStatement(String sql);
+Publisher<Void> releaseSavepoint(String name);
+Publisher<Void> rollbackTransaction();
+Publisher<Void> rollbackTransactionToSavepoint(String name);
+Publisher<Void> setTransactionIsolationLevel(IsolationLevel level);
+```
+
+There are other parts to implement, but this is the core.
+
 # Technology Compatibility Kit (TCK)
 
 R2DBC also has a suite of test cases to verify your support. Your data store implementation should import a test-scoped dependency on:
