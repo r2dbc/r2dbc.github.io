@@ -6,21 +6,21 @@ permalink: /drivers/
 
 This section is dedicated toward writing an R2DBC driver for database.
 
-## Service Provider Interface (SPI)
+# Service Provider Interface (SPI)
 
-R2DBC has a clearly defined **SPI** you must implement to host a solution for your data store. To build an implementation, you need the following artifact added to your build:
+R2DBC has a clearly defined **SPI** you must implement to host a solution for your data store. To build an implementation, add the following artifact to your build:
 
 * Group: **io.r2dbc**
 * Artifact: **r2dbc-spi**
 
-## Test Compatibility Kit (TCK)
+# Technology Compatibility Kit (TCK)
 
-R2DBC also has a suite of test cases to verify your support. Your data store implementation is expected to import a test-scoped dependency on:
+R2DBC also has a suite of test cases to verify your support. Your data store implementation should import a test-scoped dependency on:
 
 * Group: **io.r2dbc**
 * Artifact: **r2dbc-spi-test**
 
-To run all the tests that are expected, write a test class like this:
+To run all the tests that are expected, write an implementation of the TCK's `Example<T>` test class like this:
 
 ```java
 /**
@@ -31,16 +31,16 @@ To run all the tests that are expected, write a test class like this:
  */
 final class PostgresqlExample implements Example<String> {
 
-	/**
-	 * A JUnit 5-based extension to spin up a test database, 
-	 * whether using some dockerized apprpoach or an embeddable
-	 * instance if possible.
-	 */
+    /**
+     * A JUnit 5-based extension to spin up a test database, 
+     * whether using some dockerized approach or an embeddable
+     * instance if possible.
+     */
     @RegisterExtension
     static final PostgresqlServerExtension SERVER = new PostgresqlServerExtension();
 
     /**
-     * Whatever is needed to put together a connection to SERVER.
+     * Links the test database connection details to the SPI's ConnectionConfiguration.
      */
     private final PostgresqlConnectionConfiguration configuration = PostgresqlConnectionConfiguration.builder()
         .database(SERVER.getDatabase())
@@ -50,10 +50,13 @@ final class PostgresqlExample implements Example<String> {
         .username(SERVER.getUsername())
         .build();
 
+    /**
+     *  Using the configuration details, create a ConnectionFactory.
+     */
     private final PostgresqlConnectionFactory connectionFactory = new PostgresqlConnectionFactory(this.configuration);
 
     /**
-     * The SPI needs an R2DBC ConnectionFactory instance to create a connection and run tests.
+     * The TCK needs a ConnectionFactory to create a connection and run all of its tests.
      */
     @Override
     public PostgresqlConnectionFactory getConnectionFactory() {
@@ -63,7 +66,7 @@ final class PostgresqlExample implements Example<String> {
     /**
      * For binding insert statements, convert a column number into a column identifier.
      * 
-     * e.g. Column 0 => "$1"
+     * e.g. Column 0 => "$1" (PostgreSQL's notation)
      */
     @Override
     public String getIdentifier(int index) {
@@ -71,7 +74,9 @@ final class PostgresqlExample implements Example<String> {
     }
 
     /**
-     * For before/after, R2DBC SPI Test leverages Spring's JdbcTemplate for setup and teardown.
+     * For before/after, the TCK leverages Spring's JdbcTemplate for setup and teardown.
+     * NOTE: R2DBC uses Spring for test purposes only. It's NOT required in either the SPI itself,
+     *       or for driver implementations.
      */
     @Override
     public JdbcOperations getJdbcOperations() {
@@ -85,9 +90,9 @@ final class PostgresqlExample implements Example<String> {
     }
 
     /**
-     * For actualy query construction, convert a column index into a placeholder.
+     * For SQL construction, convert a column index into a placeholder.
      * 
-     * e.g. Column 0 => "$1"
+     * e.g. Column 0 => "$1" (PostgreSQL's notation)
      */
     @Override
     public String getPlaceholder(int index) {
