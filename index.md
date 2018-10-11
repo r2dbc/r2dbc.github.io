@@ -5,11 +5,11 @@ layout: default
 
 # Introduction
 
-R2DBC is an experimental endeavor, announced at SpringOne Platform 2018.
+R2DBC is an endeavor to bring reactive programming to relational data stores. It was first announced at SpringOne Platform 2018, as shown in the keynote below:
 
 <iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/E3s5f-JF8z4?start=520" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
 
-See Ben Hale go into details of reactive relational access as well as building [clients](/clients) and [drivers](/drivers):
+From the same conference, see Ben Hale go into details of what reactive relational access means. Also discover what it's like to build [clients](/clients) and [drivers](/drivers):
 
 <iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/idApf9DMdfk" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
 
