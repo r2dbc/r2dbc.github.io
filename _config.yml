@@ -9,7 +9,7 @@
 title: R2DBC
 email: r2dbc@pivotal.io
 description: > # this means to ignore newlines until "baseurl:"
-  Reactive streams support for relational databases.
+  An experimental API designed from the ground up for reactive programming.
 baseurl: "" # the subpath of your site, e.g. /blog
 url: "https://r2dbc.github.io" # the base hostname & protocol for your site
 twitter_username: r2dbc
