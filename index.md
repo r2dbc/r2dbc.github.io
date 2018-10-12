@@ -1,5 +1,4 @@
 ---
-title: Home
 layout: default
 ---
 
@@ -11,10 +10,18 @@ From the same conference, see Ben Hale go into details of what reactive relation
 
 <iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/idApf9DMdfk" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
 
-# Explore
+# Reactive Streams
 
-Feel free to check out this site. Learn about building [drivers](/drivers), creating and using [clients](/clients), testing with examples, and the power of reactive streams itself.
+R2DBC is rooted in [Reactive Streams](http://www.reactive-streams.org/). Reactive Streams defines **asynchronous**, **non-blocking** interactions between components. Instead of using a thread per connection, industry experience reveals that smaller pools of threads, even a single thread, used in a non-blocking fashion, yields higher throughput.
 
-# Community is Key
+People wanting to scale while retaining usage of relational databases are cut off from this programming model due to JDBC and JPA being blocking APIs. Blocking APIs do not work in a reactive environment.
 
-While led by members of the Spring team at Pivotal, R2DBC depends upon community support. That's why contributors from all relational data stores are invited to participate in building a reactive future.
+# Project Reactor
+
+[Project Reactor](http://projectreactor.io) is Pivotal's implementation of Reactive Streams. It takes Reactive Stream's concept of **backpressure** and merges it with **functional programming**. 
+
+The ability to declare "what" to do using Java 8 lambdas and method handles, while letting Reactor decide "when" and "how" to execute gives programmers the ability to build scalable systems.
+
+# Community
+
+While led by members of the Spring team at Pivotal, R2DBC depends upon community support. That's why contributors from all relational data stores are invited to participate in building a reactive, relational future.
