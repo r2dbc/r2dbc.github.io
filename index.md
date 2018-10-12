@@ -28,10 +28,11 @@ Reactive Streams makes it possible to move from the classic one thread per conne
 
 [TODO: graphic] People wanting to scale while retaining usage of relational databases are cut off from reactive programming due to existing standards. R2DBC introduces a new API that allows asynchronous, non-blocking code that work efficiently with relational databases.
 
-# Project Reactor [align:right]
+# Cloud Ready [align:right]
 
-[TODO: graphic] [Project Reactor](http://projectreactor.io), Pivotal's implementation of Reactive Streams, merges reactive backpressure with functional programming. Reactor makes it easy to connect the most tried and true database engines with a scalable API.
+[TODO: graphic] R2DBC supports [cloud native](https://pivotal.io/cloud-native) apps where relational databases like PostgreSQL, MySQL, and others are found. Have the freedom to pick the right one for the job and not be confined by API.
 
 # Community [align:left]
 
 [TODO: graphic] While led by members of the Spring team at Pivotal, R2DBC depends upon community support. Contributors from all relational data stores are invited to participate in building a reactive, relational future.
+
