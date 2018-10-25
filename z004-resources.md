@@ -4,9 +4,12 @@ title: Resources
 permalink: /resources/
 ---
 
-# Tutorials and Examples
+# Stay Connected
 
-TODO: List tutorials, etc.
+* Follow us on <a class="page-link" href="https://twitter.com/r2dbc" target="_blank">Twitter</a>.
+* Check out the source on <a class="page-link" href="https://github.com/r2dbc" target="_blank">Github</a>.
+
+<!-- # Tutorials and Examples -->
 
 # Videos
 
@@ -16,4 +19,4 @@ Here is a series of videos related to R2DBC.
 
 # Other
 
-* [r2dbc.github.io](https://github.com/r2dbc/r2dbc.github.io) - this site.
+* Help make changes to this <a href="https://github.com/r2dbc/r2dbc.github.io" target="_blank">site</a>!

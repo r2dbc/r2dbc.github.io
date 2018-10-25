@@ -10,29 +10,19 @@ From the same conference, see Ben Hale go into details of what reactive relation
 
 <iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/idApf9DMdfk" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
 
-# [Three-columns]
+* **Reactive Streams** - R2DBC is founded on **Reactive Streams** providing an **asynchronous**, **non-blocking** API.
+* **Relational Databases** - R2DBC engages **relational** databases with a **reactive API**, something not possible with the blocking nature of JDBC and JPA.
+* **Scalable Solutions** - Reactive Streams makes it possible to move from the classic one thread per connection approach to a more **powerful**, more **scalable** approach.
 
-## [Column 1]Reactive Streams
+# Relational meets Reactive
 
-R2DBC is founded on **Reactive Streams** providing an **asynchronous**, **non-blocking** API.
+People wanting to scale while retaining usage of relational databases are cut off from reactive programming due to existing standards. R2DBC introduces a new API that allows asynchronous, non-blocking code that work efficiently with relational databases.
 
-## [Column 2]Relational Databases
+# Cloud Ready
 
-R2DBC engages **relational** databases with a **reactive API**, something not possible with the blocking nature of JDBC and JPA.
+R2DBC supports [cloud native](https://pivotal.io/cloud-native) apps where relational databases like PostgreSQL, MySQL, and others are found. Have the freedom to pick the right one for the job and not be confined by API.
 
-## [Column 3]Scalable Solutions
+# Community
 
-Reactive Streams makes it possible to move from the classic one thread per connection approach to a more **powerful**, more **scalable** approach.
-
-# Relational meets reactive [align:left]
-
-[TODO: graphic] People wanting to scale while retaining usage of relational databases are cut off from reactive programming due to existing standards. R2DBC introduces a new API that allows asynchronous, non-blocking code that work efficiently with relational databases.
-
-# Cloud Ready [align:right]
-
-[TODO: graphic] R2DBC supports [cloud native](https://pivotal.io/cloud-native) apps where relational databases like PostgreSQL, MySQL, and others are found. Have the freedom to pick the right one for the job and not be confined by API.
-
-# Community [align:left]
-
-[TODO: graphic] While led by members of the Spring team at Pivotal, R2DBC depends upon community support. Contributors from all relational data stores are invited to participate in building a reactive, relational future.
+While led by members of the Spring team at Pivotal, R2DBC depends upon **community support**. Contributors from all relational data stores are invited to participate in building a reactive, relational future.
 
