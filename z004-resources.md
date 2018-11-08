@@ -8,6 +8,7 @@ permalink: /resources/
 
 * Follow us on <a class="page-link" href="https://twitter.com/r2dbc" target="_blank">Twitter</a>.
 * Check out the source on <a class="page-link" href="https://github.com/r2dbc" target="_blank">Github</a>.
+* Join the discussion at the <a class="page-link" href="https://groups.google.com/forum/#!forum/r2dbc" target="_blank">R2DBC Google Group</a>.
 
 <!-- # Tutorials and Examples -->
 
