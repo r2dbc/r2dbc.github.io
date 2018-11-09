@@ -28,7 +28,7 @@ From the same conference, see Ben Hale go into details of what reactive relation
 | Multiplexed connections       |                |            |               |
 | URI-based implement selection |                |            |               |
 | Observability                 |                |            |               |
-| Transaction isolation         |                |     X      |      X        |
+| Transaction isolation         | X              |     X      |      X        |
 {:.tablestyle}
 
 # Relational meets Reactive
