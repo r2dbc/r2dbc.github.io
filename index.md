@@ -17,18 +17,18 @@ From the same conference, see Ben Hale go into details of what reactive relation
 
 # Features
 
-| Feature Matrix           | H2 (in-memory) | PostgreSQL | MS SQL Server |
-| ------------------------ | -------------- | ---------- | ------------- |
-| Connection pooling       |                |            |               |
-| Broad type conversion    | X              |     X      |      X        |
-| Transactions             | X              |     X      |      X        |
-| Save points              | X              |     X      |      X        |
-| Batching                 | X              |     X      |      X        |
-| BLOB/CLOB                |                |            |               |
-| Multiplexed connections  |                |            |               |
-| URI-based observability  |                |            |               |
-| Observability            |                |            |               |
-| Transaction isolation    |                |     X      |      X        |
+| Feature Matrix                | H2 (in-memory) | PostgreSQL | MS SQL Server |
+| ----------------------------- | -------------- | ---------- | ------------- |
+| Connection pooling            |                |            |               |
+| Broad type conversion         | X              |     X      |      X        |
+| Transactions                  | X              |     X      |      X        |
+| Save points                   | X              |     X      |      X        |
+| Batching                      | X              |     X      |      X        |
+| BLOB/CLOB                     |                |            |               |
+| Multiplexed connections       |                |            |               |
+| URI-based implement selection |                |            |               |
+| Observability                 |                |            |               |
+| Transaction isolation         |                |     X      |      X        |
 {:.tablestyle}
 
 # Relational meets Reactive
