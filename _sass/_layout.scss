@@ -42,6 +42,32 @@
         }
     }
 
+    a.fab {
+        font-size: $base-font-size * 1.5;
+        vertical-align: middle;
+        &:hover {
+            text-decoration: none;
+        }
+    }
+
+    .fa-twitter {
+        &:hover {
+            color: #00aced;
+        }
+    }
+
+    .fa-stack-overflow {
+        &:hover {
+            color: #f48024;
+        }
+    }
+
+    .fa-gitub {
+        &:hover {
+            color: #333;
+        }
+    }
+
     @include media-query($on-palm) {
         position: absolute;
         top: 9px;
