@@ -8,7 +8,7 @@ author: Mark Paluch
 
 Greetings R2DBC community!
 
-We're pleased to announce the availability of R2DBC 1.0 M6. The release is available from [https://repo.spring.io/milestone/](https://repo.spring.io/milestone/) and ships with two new database drivers: **H2** and **Microsoft SQL Server**.
+We're pleased to announce the availability of R2DBC 1.0.0.M6. The release is available from [https://repo.spring.io/milestone/](https://repo.spring.io/milestone/) and ships with two new database drivers: **H2** and **Microsoft SQL Server**.
 
 This release is, in fact, a release train that comes with multiple modules:
 
