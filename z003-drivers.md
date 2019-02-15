@@ -25,6 +25,7 @@ R2DBC drivers implements the SPI listed above. The ones currently supported incl
 
 * [r2dbc-postgres](https://github.com/r2dbc/r2dbc-postgresql) - driver implemented for PostgreSQL.
 * [r2dbc-h2](https://github.com/r2dbc/r2dbc-h2) - driver implemented for H2 as a test database.
+* [r2dbc-mssql](https://github.com/r2dbc/r2dbc-mssql) - driver implemented for Microsoft SQL Server.
 
 # Coding your own driver
 
@@ -139,5 +140,3 @@ final class PostgresqlExample implements Example<String> {
 ```
 
 See [r2dbc-postgresql's Example](https://github.com/r2dbc/r2dbc-postgresql/blob/master/src/test/java/io/r2dbc/postgresql/PostgresqlExample.java) to read the full source.
-
-TODO: More documentation links per driver development.

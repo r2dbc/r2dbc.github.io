@@ -27,7 +27,7 @@ From the same conference, see Ben Hale go into details of what reactive relation
 | BLOB/CLOB                     |                |            |               |
 | Multiplexed connections       |                |            |               |
 | URI-based implement selection |                |            |               |
-| Observability                 |                |            |               |
+| Observability                 | Through R2DBC Proxy|Through R2DBC Proxy|Through R2DBC Proxy|
 | Transaction isolation         | X              |     X      |      X        |
 {:.tablestyle}
 
