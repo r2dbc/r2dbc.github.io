@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<!--[if IE]><meta http-equiv="X-UA-Compatible" content="IE=edge"><![endif]-->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="generator" content="Asciidoctor 1.5.6.1">
+<meta name="author" content="Ben Hale&lt;bhale@pivotal.io&gt;, Mark Paluch &lt;mpaluch@pivotal.io&gt;, Greg Turnquist &lt;gturnquist@pivotal.io&gt;">
+<title>R2DBC - Reactive Relational Database Connectivity</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
+<link rel="stylesheet" href="asciidoctor.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css">
+<!-- Generate a nice TOC -->
+<script src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+<script src="https://code.jquery.com/ui/1.11.4/jquery-ui.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.tocify/1.9.0/javascripts/jquery.tocify.min.js"></script>
+<!-- We do not need the tocify CSS because the asciidoc CSS already provides most of what we neeed -->
+
+<style>
+.tocify-subheader {
+		font-style: normal;
+		font-size: 95%;
+}
+.tocify ul {
+		margin: 0;
+}
+.tocify-focus {
+		background-color: #D3D3D3;
+}
+.tocify-focus > a {
+		color: black;
+}
+</style>
+
+<script type="text/javascript">
+		$(function () {
+				// Add a new container for the tocify toc into the existing toc so we can re-use its
+				// styling
+				$("#toc").append("<div id='generated-toc'></div>");
+				$("#generated-toc").tocify({
+						extendPage: true,
+						context: "#content",
+						highlightOnScroll: true,
+						hideEffect: "slideUp",
+						// Use the IDs that asciidoc already provides so that TOC links and intra-document
+						// links are the same. Anything else might confuse users when they create bookmarks.
+						hashGenerator: function(text, element) {
+								return $(element).attr("id");
+						},
+						// Smooth scrolling doesn't work properly if we use the asciidoc IDs
+						smoothScroll: false,
+						// Set to 'none' to use the tocify classes
+						theme: "none",
+						// Handle book (may contain h1) and article (only h2 deeper)
+						selectors: $( "#content" ).has( "h1" ).size() > 0 ? "h1,h2,h3,h4,h5" : "h2,h3,h4,h5",
+						ignoreSelector: ".discrete"
+				});
+				// Switch between static asciidoc toc and dynamic tocify toc based on browser size
+				// This is set to match the media selectors in the asciidoc CSS
+				// Without this, we keep the dynamic toc even if it is moved from the side to preamble
+				// position which will cause odd scrolling behavior
+				var handleTocOnResize = function() {
+						if ($(document).width() < 768) {
+								$("#generated-toc").hide();
+								$(".sectlevel0").show();
+								$(".sectlevel1").show();
+						}
+						else {
+								$("#generated-toc").show();
+								$(".sectlevel0").hide();
+								$(".sectlevel1").hide();
+						}
+				}
+				$(window).resize(handleTocOnResize);
+				handleTocOnResize();
+				// Hide level 4
+				$("ul.tocify-subheader[data-tag='4']").hide();
+		});
+</script>
+</head>
+<body class="book toc2 toc-left">
+<div id="header">
+<h1>R2DBC - Reactive Relational Database Connectivity</h1>
+<div class="details">
+<span id="author" class="author">Ben Hale&lt;bhale@pivotal.io&gt;, Mark Paluch &lt;mpaluch@pivotal.io&gt;, Greg Turnquist &lt;gturnquist@pivotal.io&gt;</span><br>
+<span id="email" class="email"><a href="mailto:r2dbc@googlegroups.com">r2dbc@googlegroups.com</a></span><br>
+<span id="revnumber">version 1.0.0.M7,</span>
+<span id="revdate">2019-02-14</span>
+<br><span id="revremark">Draft</span>
+</div>
+<div id="toc" class="toc2">
+<div id="toctitle">Table of Contents</div>
+<ul class="sectlevel1">
+<li><a href="#">Preface</a>
+<ul class="sectlevel2">
+<li><a href="#">License</a></li>
+<li><a href="#">Foreword</a></li>
+<li><a href="#doc.organisation">Organisation of this document</a></li>
+</ul>
+</li>
+<li><a href="#introduction">1. Introduction</a>
+<ul class="sectlevel2">
+<li><a href="#introduction.what-is-r2dbc">1.1. What is R2DBC?</a></li>
+<li><a href="#introduction.r2dbc-spi">1.2. The R2DBC SPI</a></li>
+<li><a href="#introduction.target-audience">1.3. Target Audience</a></li>
+<li><a href="#introduction.acknowledgements">1.4. Acknowledgements</a></li>
+<li><a href="#introduction.following">1.5. Following Development</a></li>
+<li><a href="#introduction.project-metadata">1.6. Project Metadata</a></li>
+</ul>
+</li>
+<li><a href="#goals">2. Goals</a>
+<ul class="sectlevel2">
+<li><a href="#goals.enabling">2.1. Enable Reactive Relational Database Connectivity</a></li>
+<li><a href="#goals.reactive-jvm">2.2. Fit into Reactive JVM platforms</a></li>
+<li><a href="#goals.standardization">2.3. Offer vendor-neutral access to standard features</a></li>
+<li><a href="#goals.vendor-specifics">2.4. Embrace vendor-specific features</a></li>
+<li><a href="#goals.sql">2.5. Keep the focus on SQL</a></li>
+<li><a href="#goals.kiss">2.6. Keep it minimal and simple</a></li>
+<li><a href="#goals.foundation">2.7. Provide a foundation for tools and higher-level APIs</a></li>
+<li><a href="#goals.requirements">2.8. Specify requirements unambiguously</a></li>
+</ul>
+</li>
+<li><a href="#compliance">3. Compliance</a>
+<ul class="sectlevel2">
+<li><a href="#compliance.definitions">3.1. Definitions</a></li>
+<li><a href="#compliance.guidelines">3.2. Guidelines and Requirements</a></li>
+<li><a href="#">3.3. R2DBC API Compliance</a></li>
+</ul>
+</li>
+<li><a href="#rowmetadata">4. Column and Row Metadata</a>
+<ul class="sectlevel2">
+<li><a href="#">4.1. Obtaining a <code>RowMetadata</code> Object</a></li>
+<li><a href="#columnmetadata">4.2. Retrieving <code>ColumnMetadata</code></a></li>
+<li><a href="#">4.3. Retrieving General Information for a Column</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div id="content">
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>&#169; 2017-2019 The original authors.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+Copies of this document may be made for your own use and for distribution to others, provided that you do not charge any fee for such copies and further provided that each copy contains this Copyright Notice, whether distributed in print or electronically.
+</td>
+</tr>
+</table>
+</div>
+<!-- toc disabled -->
+</div>
+</div>
+<div class="sect1">
+<h2>Preface</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3>License</h3>
+<div class="literalblock">
+<div class="content">
+<pre>Specification: R2DBC - Reactive Relational Database Connectivity
+
+Version: 1.0.0.M7
+
+Status: Draft
+
+Specification Lead: Pivotal Software, Inc.
+
+Release: 2019-02-14
+
+Copyright 2017-2019 the original author or authors.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+     <a href="http://www.apache.org/licenses/LICENSE-2.0" class="bare">http://www.apache.org/licenses/LICENSE-2.0</a>
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.</pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3>Foreword</h3>
+<div class="paragraph">
+<p>R2DBC is an endeavor to bring a reactive programming API to relational data stores.
+The <a href="#introduction">Introduction</a> contains more details about its origins and will explain its goals.</p>
+</div>
+<div class="paragraph">
+<p>This document describes the first and initial generation of R2DBC.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="doc.organisation"><a class="anchor" href="#doc.organisation"></a>Organisation of this document</h3>
+<div class="paragraph">
+<p>This document is organized in x parts:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>tbd</p>
+</li>
+</ul>
+</div>
+<div style="page-break-after: always;"></div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="introduction"><a class="anchor" href="#introduction"></a>1. Introduction</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="introduction.what-is-r2dbc"><a class="anchor" href="#introduction.what-is-r2dbc"></a>1.1. What is R2DBC?</h3>
+<div class="paragraph">
+<p>R2DBC stands for Reactive Relational Database Connectivity.
+R2DBC started as experiment and proof of concept to enable integration of relational databases into systems using reactive programming models – Reactive in the sense of an event-driven, non-blocking and functional programming model that does not make assumptions over concurrency or asynchronicity. Instead, it assumes scheduling and parallelization to happen as part of the runtime scheduling.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="introduction.r2dbc-spi"><a class="anchor" href="#introduction.r2dbc-spi"></a>1.2. The R2DBC SPI</h3>
+<div class="paragraph">
+<p>The R2DBC SPI provides reactive programmatic access to relational databases from the Java and other JVM-based programming languages.</p>
+</div>
+<div class="paragraph">
+<p>R2DBC specifies a service-provider interface (SPI) intended to be implemented by driver vendors and used by client libraries.
+Using the R2DBC SPI, applications written in a JVM programming language can execute SQL statements, and retrieve results using an underlying data source.
+The R2DBC SPI can also be used to interact with multiple data sources in a distributed, heterogeneous environment.
+R2DBC targets primarily, but is not limited to, relational databases.
+It aims for a range of data sources whose query and statement interface is based on SQL (or a SQL-like dialect) and represent their data in a tabular form.</p>
+</div>
+<div class="paragraph">
+<p>A key difference between R2DBC and imperative data access SPIs is the deferred nature of execution. R2DBC is therefore based on <a href="http://www.reactive-streams.org/">Reactive Streams</a> to use the concept of <code>Publisher</code> and <code>Subscriber</code> to allow non-blocking backpressure-aware data access.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="introduction.target-audience"><a class="anchor" href="#introduction.target-audience"></a>1.3. Target Audience</h3>
+<div class="paragraph">
+<p>This specification is targeted primarily towards:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Vendors of drivers that implement the R2DBC SPI.</p>
+</li>
+<li>
+<p>Vendors of client implementations that wish to implement a client on top of the R2DBC SPI.</p>
+</li>
+<li>
+<p>Vendors of runtime libraries that wish to embed R2DBC into their eco-system to provide R2DBC runtime services.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>This specification is also intended to serve the following purposes:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Introduction for end-users whose applications use the R2DBC SPI.</p>
+</li>
+<li>
+<p>Starting point for developers of other SPIs layered on top of the R2DBC SPI.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="introduction.acknowledgements"><a class="anchor" href="#introduction.acknowledgements"></a>1.4. Acknowledgements</h3>
+<div class="paragraph">
+<p>The R2DBC specification work is being conducted as an effort of individuals that recognized the demand for a reactive, standardized API for relational database access.
+We want to thank all <a href="https://github.com/r2dbc/r2dbc-spi/graphs/contributors">contributing members</a> for their countless hours of work and discussion.</p>
+</div>
+<div class="paragraph">
+<p>Thanks also go to Ollie without whom this initiative would not even exist.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="introduction.following"><a class="anchor" href="#introduction.following"></a>1.5. Following Development</h3>
+<div class="paragraph">
+<p>For information on R2DBC source code repositories, nightly builds, and snapshot artifacts, see the <a href="http://r2dbc.io/resources/">R2DBC</a> homepage.
+You can help make R2DBC best serve the needs of the community by interacting with developers through the community.
+To follow developer activity, look for the mailing list information on the R2DBC homepage.
+If you encounter a bug or want to suggest an improvement, please create a ticket on the R2DBC issue tracker.
+R2DBC forms an open-source organization on GitHub bundling various projects (SPI, drivers) under R2DBC.</p>
+</div>
+<div class="paragraph">
+<p>To stay up to date with the latest news and announcements in the R2DBC eco system, subscribe to the mailing list. You can also follow the project team on Twitter (<a href="https://twitter.com/r2dbc">@R2DBC</a>).</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="introduction.project-metadata"><a class="anchor" href="#introduction.project-metadata"></a>1.6. Project Metadata</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>Version control: <a href="https://github.com/r2dbc/r2dbc-spi" class="bare">https://github.com/r2dbc/r2dbc-spi</a></p>
+</li>
+<li>
+<p>Mailing list: <a href="https://groups.google.com/forum/#!forum/r2dbc">https://groups.google.com/forum/#!forum/r2dbc</a></p>
+</li>
+<li>
+<p>Issue tracker: <a href="https://github.com/r2dbc/r2dbc-spi/issues" class="bare">https://github.com/r2dbc/r2dbc-spi/issues</a></p>
+</li>
+<li>
+<p>Release repository: <a href="https://repo.spring.io/libs-release" class="bare">https://repo.spring.io/libs-release</a></p>
+</li>
+<li>
+<p>Milestone repository: <a href="https://repo.spring.io/libs-milestone" class="bare">https://repo.spring.io/libs-milestone</a></p>
+</li>
+<li>
+<p>Snapshot repository: <a href="https://repo.spring.io/libs-snapshot" class="bare">https://repo.spring.io/libs-snapshot</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="goals"><a class="anchor" href="#goals"></a>2. Goals</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>This section outlines the goals for R2DBC and the design philosophy for its SPI.</p>
+</div>
+<div class="sect2">
+<h3 id="goals.enabling"><a class="anchor" href="#goals.enabling"></a>2.1. Enable Reactive Relational Database Connectivity</h3>
+<div class="paragraph">
+<p>The R2DBC specification aims for establishing an interface with a minimal API surface to integrate with relational databases using a reactive programming model.
+The most significant goals are honoring and embracing the properties of reactive programming:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Non-blocking I/O</p>
+</li>
+<li>
+<p>Deferred execution</p>
+</li>
+<li>
+<p>Treat application control as series of events (data, errors, completion)</p>
+</li>
+<li>
+<p>No longer assume control of resources but leave resource scheduling to the runtime/platform („React to resource availability“)</p>
+</li>
+<li>
+<p>Efficient usage of resources</p>
+</li>
+<li>
+<p>Leave flow control to be handled by the runtime</p>
+</li>
+<li>
+<p>Stream-oriented data consumption</p>
+</li>
+<li>
+<p>Functional programming within operators</p>
+</li>
+<li>
+<p>Remove assumptions over concurrency from the programming model and leave this aspect up the runtime</p>
+</li>
+<li>
+<p>Use back-pressure to allow flow control, to defer the actual execution and to not overwhelm consumers</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="goals.reactive-jvm"><a class="anchor" href="#goals.reactive-jvm"></a>2.2. Fit into Reactive JVM platforms</h3>
+<div class="paragraph">
+<p>R2DBC aims for seamless integration of reactive JVM platforms targeting Java as its primary platform.
+R2DBC should also be usable from other platforms such as Kotlin or Scala without scarifying its SPI for the sake of idiomatic use in a different platform.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="goals.standardization"><a class="anchor" href="#goals.standardization"></a>2.3. Offer vendor-neutral access to standard features</h3>
+<div class="paragraph">
+<p>R2DBC SPI strives to provide access to features that are commonly found across different vendor implementations.
+The goal here is providing a balance between features that are implemented in a driver and these that are better implemented in a client library.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="goals.vendor-specifics"><a class="anchor" href="#goals.vendor-specifics"></a>2.4. Embrace vendor-specific features</h3>
+<div class="paragraph">
+<p>Each database comes with its very own feature set and how these are implemented.
+R2DBC&#8217;s goal here is to define a minimal standard over commonly used functionality and allow for vendor-specific deviation.
+Drivers can implement additional functionality or make these transparent through R2DBC SPI.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="goals.sql"><a class="anchor" href="#goals.sql"></a>2.5. Keep the focus on SQL</h3>
+<div class="paragraph">
+<p>The focus of R2DBC is on accessing relational data from the Java programming language using databases that provide a SQL interface to interact with.</p>
+</div>
+<div class="paragraph">
+<p>The goal here is not to limit implementations to relational-only databases.
+Instead, providing guidance for uniform reactive data access using tabular data consumption patterns.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="goals.kiss"><a class="anchor" href="#goals.kiss"></a>2.6. Keep it minimal and simple</h3>
+<div class="paragraph">
+<p>R2DBC does not aim for being a general purpose data access API.</p>
+</div>
+<div class="paragraph">
+<p>R2DBC specializes in reactive data access and common usage patterns that result from relational data interaction.
+R2DBC does not aim for abstracting common functionality that needs to be re-implemented by driver vendors in a similar manner. It aims for leaving this functionality to client libraries of which there are typically fewer implementations than drivers.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="goals.foundation"><a class="anchor" href="#goals.foundation"></a>2.7. Provide a foundation for tools and higher-level APIs</h3>
+<div class="paragraph">
+<p>R2DBC SPI aims for being primarily consumed though client library implementations.</p>
+</div>
+<div class="paragraph">
+<p>It does not aim for being an end-user or application developer programming interface.</p>
+</div>
+<div class="paragraph">
+<p>Having a uniform reactive relational data access SPI makes R2DBC a valuable target platform for tool vendors and application developers who want to create portable tools and applications.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="goals.requirements"><a class="anchor" href="#goals.requirements"></a>2.8. Specify requirements unambiguously</h3>
+<div class="paragraph">
+<p>The requirements for R2DBC compliance should be unambiguous and easy to identify.
+The R2DBC specification and the API documentation (Javadoc) clarify which features are required and which are optional.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="compliance"><a class="anchor" href="#compliance"></a>3. Compliance</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>This chapter identifies the required features of a D2DBC driver implementation to claim compliance.
+Any not identified features are considered optional.</p>
+</div>
+<div class="sect2">
+<h3 id="compliance.definitions"><a class="anchor" href="#compliance.definitions"></a>3.1. Definitions</h3>
+<div class="paragraph">
+<p>To avoid ambiguity, we will use the following terms in the compliance section and across this specification:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><em>R2DBC driver implementation</em> (short: driver): A driver implementing the R2DBC SPI.
+A driver may provide support for features which are not implemented by the underlying database or expose functionality that is not declared by the R2DBC SPI (<em>"Extension"</em>).</p>
+</li>
+<li>
+<p><em>Supported feature</em>: A feature for which the R2DBC API implementation supports standard syntax and semantics.</p>
+</li>
+<li>
+<p><em>Partially supported feature</em>: A feature for which some methods are implemented via standard syntax and semantics and some required methods are not implemented, typically covered by <code>default</code> interface methods.</p>
+</li>
+<li>
+<p><em>Extension</em>: A feature that is not covered by R2DBC or a non-standard implementation of a feature that is covered.</p>
+</li>
+<li>
+<p><em>Fully implemented</em>: Term to express that an interface has all its methods implemented to support the semantics defined in this specification.</p>
+</li>
+<li>
+<p><em>Must implement</em>: Term to express that an interface must be implemented although some methods on the interface are considered optional. Methods that are not implemented rely on the <code>default</code> implementation.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="compliance.guidelines"><a class="anchor" href="#compliance.guidelines"></a>3.2. Guidelines and Requirements</h3>
+<div class="paragraph">
+<p>The following guidelines apply to R2DBC compliance:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>An R2DBC API should implement SQL support as its primary interface. R2DBC does not rely upon, nor does it presume a specific SQL version. SQL and aspects of statements can be entirely handled in the data source or as part of the driver.</p>
+</li>
+<li>
+<p>The specification consists of this specification document and specifications documented in each interface&#8217;s Javadoc.</p>
+</li>
+<li>
+<p>Drivers must support bind parameter markers.</p>
+</li>
+<li>
+<p>Drivers must support transactions.</p>
+</li>
+<li>
+<p>Drivers must support native and indexed access to column and parameter references.</p>
+</li>
+<li>
+<p>Index references to columns and parameters are zero-based. The first index begins with <code>0</code>.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3>3.3. R2DBC API Compliance</h3>
+<div class="paragraph">
+<p>A driver that is compliant with the R2DBC specification must do the following:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Adhere to the guidelines and requirements above.</p>
+</li>
+<li>
+<p>Support <code>ConnectionFactory</code> discovery through Java Service Loader of <code>ConnectionFactoryProvider</code>.</p>
+</li>
+<li>
+<p>Implement a non-blocking I/O layer.</p>
+</li>
+<li>
+<p>Fully implement the following interfaces:</p>
+<div class="ulist">
+<ul>
+<li>
+<p><code>io.r2dbc.spi.ConnectionFactory</code></p>
+</li>
+<li>
+<p><code>io.r2dbc.spi.ConnectionFactoryMetadata</code></p>
+</li>
+<li>
+<p><code>io.r2dbc.spi.ConnectionFactoryProvider</code></p>
+</li>
+<li>
+<p><code>io.r2dbc.spi.Result</code></p>
+</li>
+<li>
+<p><code>io.r2dbc.spi.Row</code></p>
+</li>
+<li>
+<p><code>io.r2dbc.spi.RowMetadata</code></p>
+</li>
+<li>
+<p><code>io.r2dbc.spi.Batch</code></p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Must implement <code>io.r2dbc.spi.Statement</code> interface with the exception of the following optional methods:</p>
+<div class="ulist">
+<ul>
+<li>
+<p><code>returnGeneratedValues(…)</code>: Calling this method should be a no-op for drivers not supporting key generation.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Must implement <code>io.r2dbc.spi.ColumnMetadata</code> interface with the exception of the following optional methods:</p>
+<div class="ulist">
+<ul>
+<li>
+<p><code>getPrecision()</code></p>
+</li>
+<li>
+<p><code>getScale()</code></p>
+</li>
+<li>
+<p><code>getNullability()</code></p>
+</li>
+<li>
+<p><code>getJavaType()</code></p>
+</li>
+<li>
+<p><code>getNativeTypeMetadata()</code></p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="rowmetadata"><a class="anchor" href="#rowmetadata"></a>4. Column and Row Metadata</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The <code>RowMetadata</code> interface is implemented by R2DBC drivers to provide information about tabular results.
+It is used primarily by libraries and applications to determine the properties of a row and its columns.</p>
+</div>
+<div class="paragraph">
+<p>In cases where the result properties of a SQL statement are unknown until execution, the <code>RowMetadata</code> can be used to determine the actual properties of a row.</p>
+</div>
+<div class="paragraph">
+<p><code>RowMetadata</code> exposes <code>ColumnMetadata</code> for each column in the result.
+Drivers should provide <code>ColumnMetadata</code> on a best-effort basis.
+Column metadata is typically a by-product of statement execution.
+The amount of available information is vendor-dependent.
+Metadata retrieval can require additional lookups (internal query execution) to provide a complete metadata descriptor.
+Issuing queries during result processing conflicts with the streaming nature of R2DBC and so <code>ColumnMetadata</code> declares two sets of methods: Methods that must be implemented and methods that can optionally be implemented by drivers.</p>
+</div>
+<div class="sect2">
+<h3>4.1. Obtaining a <code>RowMetadata</code> Object</h3>
+<div class="paragraph">
+<p>A <code>RowMetadata</code> object is created during tabular results consumption through <code>Result.map(…)</code>.
+It is created for each row. The following example illustrates retrieval and usage using an anonymous inner class:</p>
+</div>
+<div class="exampleblock">
+<div class="title">Example 1. Using <code>RowMetadata</code> and retieving <code>ColumnMetadata</code></div>
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">// result is a Result object
+result.map(new BiFunction&lt;Row, RowMetadata, Object&gt;() {
+
+    @Override
+    public Object apply(Row row, RowMetadata rowMetadata) {
+        ColumnMetadata my_column = rowMetadata.getColumnMetadata("my_column");
+        ColumnMetadata.Nullability nullability = my_column.getNullability();
+        // …
+    }
+})</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="columnmetadata"><a class="anchor" href="#columnmetadata"></a>4.2. Retrieving <code>ColumnMetadata</code></h3>
+<div class="paragraph">
+<p><code>RowMetadata</code> methods are used to retrieve metadata for a single or all columns.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>getColumnMetadata(…)</code> returns the <code>ColumnMetadata</code> by using a column identifier. The identifier is either a zero-based index or the column name, see <a href="#compliance.guidelines">Guidelines and Requirements</a>.</p>
+</li>
+<li>
+<p><code>getColumnMetadatas()</code> returns an unmodifiable collection of <code>ColumnMetadata</code> objects.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3>4.3. Retrieving General Information for a Column</h3>
+<div class="paragraph">
+<p><code>ColumnMetadata</code> declares methods to access column metadata on a best-effort basis.
+Column metadata that is available as a by-product of statement execution must be made available through <code>ColumnMetadata</code>.
+Metadata exposure requiring interaction with the database (e.g. issuing queries to information schema entities to resolve type properties) should not be exposed as methods on <code>ColumnMetadata</code> are expected to be non-blocking.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+Implementation note: Drivers can use metadata from a static mapping or obtain metadata indexes on connection creation.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>The following example illustrates how to consume <code>ColumnMetadata</code> using lambdas:</p>
+</div>
+<div class="exampleblock">
+<div class="title">Example 2. Retrieving <code>ColumnMetadata</code> information</div>
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">// row is a RowMetadata object
+row.getColumnMetadatas().forEach(columnMetadata -&gt; {
+
+    String name = columnMetadata.getName();
+    Integer precision = columnMetadata.getPrecision();
+    Integer scale = columnMetadata.getScale();
+});</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p>See the API specification for more details.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div id="footer">
+<div id="footer-text">
+Version 1.0.0.M7<br>
+Last updated 2019-02-13 08:48:56 MEZ
+</div>
+</div>
+<link rel="stylesheet" href="js/highlight/styles/atom-one-dark-reasonable.min.css">
+<script src="js/highlight/highlight.min.js"></script>
+<script>hljs.initHighlighting()</script>
+</body>
+</html>
