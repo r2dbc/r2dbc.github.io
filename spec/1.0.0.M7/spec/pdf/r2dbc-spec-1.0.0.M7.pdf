@@ -1465,7 +1465,7 @@ endobj
 << /Border [0 0 0]
 /A << /Type /Action
 /S /URI
-/URI (http://www.reactive-streams.org/)
+/URI (https://www.reactive-streams.org/)
 >>
 /Subtype /Link
 /Rect [263.0449 397.28 351.2635 411.56]
@@ -1950,7 +1950,7 @@ endobj
 << /Border [0 0 0]
 /A << /Type /Action
 /S /URI
-/URI (http://r2dbc.io/resources/)
+/URI (https://r2dbc.io/resources/)
 >>
 /Subtype /Link
 /Rect [48.24 707.22 81.9135 721.5]
