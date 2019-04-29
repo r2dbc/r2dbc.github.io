@@ -13,7 +13,7 @@ If you're eager to start using R2DBC to build an application, check out the [exi
 TODO: Eventually include links to documentation for the following clients.
 
 * [r2dbc-client](https://github.com/r2dbc/r2dbc-client) - client using pure Reactor (i.e. no Spring dependencies).
-* spring-data-r2dbc - Repository-based Spring Data implementation using R2DBC under the hood.
+* [spring-data-r2dbc](https://github.com/spring-projects/spring-data-r2dbc) - Spring Data client for R2DBC.
 
 ## New clients
 
