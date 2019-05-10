@@ -50,11 +50,36 @@ NOTE: Please use `*6` to mute/un-mute your phone during the call.
 
 <!-- # Tutorials and Examples -->
 
+# Blog Posts
+
+* [Charles Humble: Reactive Relational Database Connectivity Driver, R2DBC](https://www.infoq.com/news/2018/10/springone-r2dbc)
+* [Mark Paluch: Reactive Programming and Relational Databases](https://spring.io/blog/2018/12/07/reactive-programming-and-relational-databases)
+* [Josh Long: Spring Tips: Reactive MySQL Support with Jasync SQL and R2DBC](https://spring.io/blog/2019/03/20/spring-tips-reactive-mysql-support-with-jasync-sql-and-r2dbc)
+* [Dan Newton: Asynchronous RDBMS Access With Spring Data R2DBC](https://dzone.com/articles/asynchronous-rdbms-access-with-spring-data-r2dbc)
+* [Dan Newton: Spring Data R2DBC for Microsoft SQL Server](https://lankydan.dev/spring-data-r2dbc-for-microsoft-sql-server)
+
+# Code Examples
+
+* [Spring Data R2DBC](https://github.com/spring-projects/spring-data-examples/tree/4576dc413f1d68636a35fb44cd1c175bbfacea3d/r2dbc/example)
+* [R2DBC Tutorial github.com/lankydan/spring-data-r2dbc](https://github.com/lankydan/spring-data-r2dbc)
+* [R2DBC Scala Examples](https://github.com/seratch/r2dbc-samples-in-scala)
+
 # Videos
 
 Here is a series of videos related to R2DBC.
 
 <iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/tciPoh1vmmY" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+
+<iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/E3s5f-JF8z4?start=520" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+
+<iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/fIMdlE5Hvzk" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+
+<iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/qwF6v6FN_Uc" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+
+<iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/DvO4zLVDkMs" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+
+<iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/sUXKDGt3QRk" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+
 
 # Other
 

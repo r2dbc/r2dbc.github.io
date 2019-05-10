@@ -10,31 +10,22 @@ If you're eager to start using R2DBC to build an application, check out the [exi
 
 ## Existing clients
 
-TODO: Eventually include links to documentation for the following clients.
-
 * [r2dbc-client](https://github.com/r2dbc/r2dbc-client) - client using pure Reactor (i.e. no Spring dependencies).
 * [spring-data-r2dbc](https://github.com/spring-projects/spring-data-r2dbc) - Spring Data client for R2DBC.
+* [jOOQ]() - jOOQ support SQL generation for R2DBC. No execution integration yet. 
 
-## New clients
+## Client Development under Investigation
+
+* [jOOQ](https://github.com/jOOQ/jOOQ/issues/6298) - GitHub issue for jOOQ query execution over R2DBC.
+* [MyBatis](https://github.com/mybatis/mybatis-3/issues/1444) - GitHub issue for MyBatis.
+* [Jdbi](https://github.com/jdbi/jdbi/issues/1454) - GitHub issue for Jdbi.
+
+
+## Writing a Client
 
 R2DBC's minimal SPI makes it easy to write a custom client. The modules above can provide inspiration if you wish to write a different client for the community.
 
-To write a custom client, R2DBC's `Connection` SPI provides you the necessary building blocks:
-
-```
-Publisher<Void> beginTransaction();
-Publisher<Void> close();
-Publisher<Void> commitTransaction();
-Batch createBatch();
-Publisher<Void> createSavepoint(String name);
-Statement createStatement(String sql);
-Publisher<Void> releaseSavepoint(String name);
-Publisher<Void> rollbackTransaction();
-Publisher<Void> rollbackTransactionToSavepoint(String name);
-Publisher<Void> setTransactionIsolationLevel(IsolationLevel level);
-```
-
-TODO: More documentation links per client development.
+To write a custom client, R2DBC's [`ConnectionFactory`](https://github.com/r2dbc/r2dbc-spi/blob/master/r2dbc-spi/src/main/java/io/r2dbc/spi/ConnectionFactory.java) , [`Connection`](https://github.com/r2dbc/r2dbc-spi/blob/master/r2dbc-spi/src/main/java/io/r2dbc/spi/Connection.java) , and [`Statement`](https://github.com/r2dbc/r2dbc-spi/blob/master/r2dbc-spi/src/main/java/io/r2dbc/spi/Statement.java) SPI provides you the necessary building blocks.
 
 The SPI can be found at:
 
