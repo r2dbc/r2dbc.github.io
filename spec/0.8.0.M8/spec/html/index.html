@@ -1,0 +1,2447 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<!--[if IE]><meta http-equiv="X-UA-Compatible" content="IE=edge"><![endif]-->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="generator" content="Asciidoctor 1.5.6.1">
+<meta name="author" content="Ben Hale&lt;bhale@pivotal.io&gt;, Mark Paluch &lt;mpaluch@pivotal.io&gt;, Greg Turnquist &lt;gturnquist@pivotal.io&gt;">
+<title>R2DBC - Reactive Relational Database Connectivity</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
+<link rel="stylesheet" href="./asciidoctor.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css">
+<!-- Generate a nice TOC -->
+<script src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+<script src="https://code.jquery.com/ui/1.11.4/jquery-ui.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.tocify/1.9.0/javascripts/jquery.tocify.min.js"></script>
+
+
+<style>
+.tocify-subheader {
+		font-style: normal;
+		font-size: 95%;
+}
+.tocify ul {
+		margin: 0;
+}
+.tocify-focus {
+		background-color: #D3D3D3;
+}
+.tocify-focus > a {
+		color: black;
+}
+</style>
+
+<script type="text/javascript">
+		$(function () {
+				// Add a new container for the tocify toc into the existing toc so we can re-use its
+				// styling
+				$("#toc").append("<div id='generated-toc'></div>");
+				$("#generated-toc").tocify({
+						extendPage: true,
+						context: "#content",
+						highlightOnScroll: true,
+						hideEffect: "slideUp",
+						// Use the IDs that asciidoc already provides so that TOC links and intra-document
+						// links are the same. Anything else might confuse users when they create bookmarks.
+						hashGenerator: function(text, element) {
+								return $(element).attr("id");
+						},
+						// Smooth scrolling doesn't work properly if we use the asciidoc IDs
+						smoothScroll: false,
+						// Set to 'none' to use the tocify classes
+						theme: "none",
+						// Handle book (may contain h1) and article (only h2 deeper)
+						selectors: $( "#content" ).has( "h1" ).size() > 0 ? "h1,h2,h3,h4,h5" : "h2,h3,h4,h5",
+						ignoreSelector: ".discrete"
+				});
+				// Switch between static asciidoc toc and dynamic tocify toc based on browser size
+				// This is set to match the media selectors in the asciidoc CSS
+				// Without this, we keep the dynamic toc even if it is moved from the side to preamble
+				// position which will cause odd scrolling behavior
+				var handleTocOnResize = function() {
+						if ($(document).width() < 768) {
+								$("#generated-toc").hide();
+								$(".sectlevel0").show();
+								$(".sectlevel1").show();
+						}
+						else {
+								$("#generated-toc").show();
+								$(".sectlevel0").hide();
+								$(".sectlevel1").hide();
+						}
+				}
+				$(window).resize(handleTocOnResize);
+				handleTocOnResize();
+				// Hide level 4
+				$("ul.tocify-subheader[data-tag='4']").hide();
+		});
+</script>
+</head>
+<body class="book toc2 toc-left">
+<div id="header">
+<h1>R2DBC - Reactive Relational Database Connectivity</h1>
+<div class="details">
+<span id="author" class="author">Ben Hale&lt;bhale@pivotal.io&gt;, Mark Paluch &lt;mpaluch@pivotal.io&gt;, Greg Turnquist &lt;gturnquist@pivotal.io&gt;</span><br>
+<span id="email" class="email"><a href="mailto:r2dbc@googlegroups.com">r2dbc@googlegroups.com</a></span><br>
+<span id="revnumber">version 0.8.0.M8,</span>
+<span id="revdate">2019-05-14</span>
+<br><span id="revremark">Draft</span>
+</div>
+<div id="toc" class="toc2">
+<div id="toctitle">Table of Contents</div>
+<ul class="sectlevel1">
+<li><a href="#">Preface</a>
+<ul class="sectlevel2">
+<li><a href="#">License</a></li>
+<li><a href="#">Foreword</a></li>
+<li><a href="#doc.organisation">Organisation of this document</a></li>
+</ul>
+</li>
+<li><a href="#introduction">1. Introduction</a>
+<ul class="sectlevel2">
+<li><a href="#introduction.what-is-r2dbc">1.1. What is R2DBC?</a></li>
+<li><a href="#introduction.r2dbc-spi">1.2. The R2DBC SPI</a></li>
+<li><a href="#introduction.target-audience">1.3. Target Audience</a></li>
+<li><a href="#introduction.acknowledgements">1.4. Acknowledgements</a></li>
+<li><a href="#introduction.following">1.5. Following Development</a></li>
+<li><a href="#introduction.project-metadata">1.6. Project Metadata</a></li>
+</ul>
+</li>
+<li><a href="#goals">2. Goals</a>
+<ul class="sectlevel2">
+<li><a href="#goals.enabling">2.1. Enable Reactive Relational Database Connectivity</a></li>
+<li><a href="#goals.reactive-jvm">2.2. Fit into Reactive JVM platforms</a></li>
+<li><a href="#goals.standardization">2.3. Offer vendor-neutral access to standard features</a></li>
+<li><a href="#goals.vendor-specifics">2.4. Embrace vendor-specific features</a></li>
+<li><a href="#goals.sql">2.5. Keep the focus on SQL</a></li>
+<li><a href="#goals.kiss">2.6. Keep it minimal and simple</a></li>
+<li><a href="#goals.foundation">2.7. Provide a foundation for tools and higher-level APIs</a></li>
+<li><a href="#goals.requirements">2.8. Specify requirements unambiguously</a></li>
+</ul>
+</li>
+<li><a href="#compliance">3. Compliance</a>
+<ul class="sectlevel2">
+<li><a href="#compliance.definitions">3.1. Definitions</a></li>
+<li><a href="#compliance.guidelines">3.2. Guidelines and Requirements</a></li>
+<li><a href="#compliance.r2dbc">3.3. R2DBC API Compliance</a></li>
+</ul>
+</li>
+<li><a href="#overview">4. Overview</a>
+<ul class="sectlevel2">
+<li><a href="#overview.connection">4.1. Establishing a Connection</a>
+<ul class="sectlevel3">
+<li><a href="#overview.connection.discovery">4.1.1. Using <code>ConnectionFactory</code> Discovery</a></li>
+<li><a href="#overview.connection.url">4.1.2. R2DBC Connection URL</a></li>
+<li><a href="#overview.connection.usage">4.1.3. Executing SQL and Retrieving Results</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#connections">5. Connections</a>
+<ul class="sectlevel2">
+<li><a href="#connections.factory">5.1. The <code>ConnectionFactory</code> Interface</a></li>
+<li><a href="#connections.factory.discovery">5.2. <code>ConnectionFactory</code> Discovery Mechanism</a></li>
+<li><a href="#connections.factory.options">5.3. The <code>ConnectionFactoryOptions</code> Class</a></li>
+<li><a href="#">5.4. Obtaining <code>Connection</code> Objects</a></li>
+<li><a href="#">5.5. Closing <code>Connection</code> Objects</a></li>
+</ul>
+</li>
+<li><a href="#statements">6. Statements</a>
+<ul class="sectlevel2">
+<li><a href="#statements.interface">6.1. The Statement Interface</a>
+<ul class="sectlevel3">
+<li><a href="#statements.creating">6.1.1. Creating Statements</a></li>
+<li><a href="#statements.executing">6.1.2. Executing Statement Objects</a></li>
+</ul>
+</li>
+<li><a href="#statements.parameterized">6.2. Parameterized Statements</a>
+<ul class="sectlevel3">
+<li><a href="#statements.bind">6.2.1. Binding Parameters</a></li>
+<li><a href="#statements.batching">6.2.2. Batching</a></li>
+<li><a href="#statements.null">6.2.3. Setting <code>NULL</code> Parameters</a></li>
+</ul>
+</li>
+<li><a href="#statements.generated-values">6.3. Retrieving Auto Generated Values</a></li>
+</ul>
+</li>
+<li><a href="#batches">7. Batches</a>
+<ul class="sectlevel2">
+<li><a href="#batches.interface">7.1. The Batch Interface</a>
+<ul class="sectlevel3">
+<li><a href="#batches.creating">7.1.1. Creating Batches</a></li>
+<li><a href="#batches.executing">7.1.2. Executing Batch Objects</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#results">8. Results</a>
+<ul class="sectlevel2">
+<li><a href="#results.characteristics">8.1. Result Characteristics</a></li>
+<li><a href="#results.creating">8.2. Creating <code>Result</code> Objects</a>
+<ul class="sectlevel3">
+<li><a href="#results.cursor">8.2.1. Cursor Movement</a></li>
+</ul>
+</li>
+<li><a href="#rows">8.3. Rows</a>
+<ul class="sectlevel3">
+<li><a href="#row.values">8.3.1. Retrieving Values</a></li>
+</ul>
+</li>
+<li><a href="#row.methods">8.4. Interface Methods</a></li>
+</ul>
+</li>
+<li><a href="#rowmetadata">9. Column and Row Metadata</a>
+<ul class="sectlevel2">
+<li><a href="#">9.1. Obtaining a <code>RowMetadata</code> Object</a></li>
+<li><a href="#columnmetadata">9.2. Retrieving <code>ColumnMetadata</code></a></li>
+<li><a href="#">9.3. Retrieving General Information for a Column</a></li>
+</ul>
+</li>
+<li><a href="#exceptions">10. Exceptions</a>
+<ul class="sectlevel2">
+<li><a href="#exceptions.general">10.1. General Exceptions</a>
+<ul class="sectlevel3">
+<li><a href="#exceptions.iae">10.1.1. <code>IllegalArgumentException</code></a></li>
+<li><a href="#exceptions.ise">10.1.2. <code>IllegalStateException</code></a></li>
+<li><a href="#exceptions.uoe">10.1.3. <code>UnsupportedOperationException</code></a></li>
+<li><a href="#exceptions.r2e">10.1.4. <code>R2dbcException</code></a></li>
+</ul>
+</li>
+<li><a href="#exceptions.categorized">10.2. Categorized Exceptions</a>
+<ul class="sectlevel3">
+<li><a href="#exceptions.categorized.non-transient">10.2.1. Non-Transient Exceptions</a></li>
+<li><a href="#exceptions.categorized.transient">10.2.2. Transient Exceptions</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#datatypes">11. Data Types</a>
+<ul class="sectlevel2">
+<li><a href="#datatypes.mapping">11.1. Mapping of Data Types</a></li>
+<li><a href="#datatypes.mapping.advanced">11.2. Mapping of Advanced Data Types</a>
+<ul class="sectlevel3">
+<li><a href="#datatypes.lob">11.2.1. <code>Blob</code> and <code>Clob</code> Objects</a></li>
+<li><a href="#datatypes.lob.create">11.2.2. Creating <code>Blob</code> and <code>Clob</code> Objects</a></li>
+<li><a href="#datatypes.lob.retrieve">11.2.3. Retrieving <code>Blob</code> and <code>Clob</code> Objects from a <code>Row</code></a></li>
+<li><a href="#datatypes.lob.data">11.2.4. Accessing <code>Blob</code> and <code>Clob</code> Data</a></li>
+<li><a href="#datatypes.lob.releasing">11.2.5. Releasing <code>Blob</code> and <code>Clob</code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#extensions">12. Extensions</a>
+<ul class="sectlevel2">
+<li><a href="#wrapped">12.1. Wrapped Interface</a>
+<ul class="sectlevel3">
+<li><a href="#wrapped.usage">12.1.1. Usage</a></li>
+<li><a href="#wrapped.methods">12.1.2. Interface Methods</a></li>
+<li><a href="#wrapped.unwrap">12.1.3. <code>unwrap</code> Method</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div id="content">
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>&#169; 2017-2019 The original authors.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+Copies of this document may be made for your own use and for distribution to others, provided that you do not charge any fee for such copies and further provided that each copy contains this Copyright Notice, whether distributed in print or electronically.
+</td>
+</tr>
+</table>
+</div>
+<!-- toc disabled -->
+</div>
+</div>
+<div class="sect1">
+<h2>Preface</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3>License</h3>
+<div class="literalblock">
+<div class="content">
+<pre>Specification: R2DBC - Reactive Relational Database Connectivity
+
+Version: 0.8.0.M8
+
+Status: Draft
+
+Specification Lead: Pivotal Software, Inc.
+
+Release: 2019-05-14
+
+Copyright 2017-2019 the original author or authors.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+     <a href="https://www.apache.org/licenses/LICENSE-2.0" class="bare">https://www.apache.org/licenses/LICENSE-2.0</a>
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.</pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3>Foreword</h3>
+<div class="paragraph">
+<p>R2DBC is an endeavor to bring a reactive programming API to relational data stores.
+The <a href="#introduction">Introduction</a> contains more details about its origins and will explain its goals.</p>
+</div>
+<div class="paragraph">
+<p>This document describes the first and initial generation of R2DBC.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="doc.organisation"><a class="anchor" href="#doc.organisation"></a>Organisation of this document</h3>
+<div class="paragraph">
+<p>This document is organized in x parts:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>tbd</p>
+</li>
+</ul>
+</div>
+<div style="page-break-after: always;"></div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="introduction"><a class="anchor" href="#introduction"></a>1. Introduction</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="introduction.what-is-r2dbc"><a class="anchor" href="#introduction.what-is-r2dbc"></a>1.1. What is R2DBC?</h3>
+<div class="paragraph">
+<p>R2DBC stands for Reactive Relational Database Connectivity.
+R2DBC started as experiment and proof of concept to enable integration of relational databases into systems using reactive programming models – Reactive in the sense of an event-driven, non-blocking and functional programming model that does not make assumptions over concurrency or asynchronicity. Instead, it assumes scheduling and parallelization to happen as part of the runtime scheduling.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="introduction.r2dbc-spi"><a class="anchor" href="#introduction.r2dbc-spi"></a>1.2. The R2DBC SPI</h3>
+<div class="paragraph">
+<p>The R2DBC SPI provides reactive programmatic access to relational databases from the Java and other JVM-based programming languages.</p>
+</div>
+<div class="paragraph">
+<p>R2DBC specifies a service-provider interface (SPI) intended to be implemented by driver vendors and used by client libraries.
+Using the R2DBC SPI, applications written in a JVM programming language can execute SQL statements, and retrieve results using an underlying data source.
+The R2DBC SPI can also be used to interact with multiple data sources in a distributed, heterogeneous environment.
+R2DBC targets primarily, but is not limited to, relational databases.
+It aims for a range of data sources whose query and statement interface is based on SQL (or a SQL-like dialect) and represent their data in a tabular form.</p>
+</div>
+<div class="paragraph">
+<p>A key difference between R2DBC and imperative data access SPIs is the deferred nature of execution. R2DBC is therefore based on <a href="https://www.reactive-streams.org/">Reactive Streams</a> to use the concept of <code>Publisher</code> and <code>Subscriber</code> to allow non-blocking backpressure-aware data access.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="introduction.target-audience"><a class="anchor" href="#introduction.target-audience"></a>1.3. Target Audience</h3>
+<div class="paragraph">
+<p>This specification is targeted primarily towards:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Vendors of drivers that implement the R2DBC SPI.</p>
+</li>
+<li>
+<p>Vendors of client implementations that wish to implement a client on top of the R2DBC SPI.</p>
+</li>
+<li>
+<p>Vendors of runtime libraries that wish to embed R2DBC into their eco-system to provide R2DBC runtime services.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>This specification is also intended to serve the following purposes:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Introduction for end-users whose applications use the R2DBC SPI.</p>
+</li>
+<li>
+<p>Starting point for developers of other SPIs layered on top of the R2DBC SPI.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="introduction.acknowledgements"><a class="anchor" href="#introduction.acknowledgements"></a>1.4. Acknowledgements</h3>
+<div class="paragraph">
+<p>The R2DBC specification work is being conducted as an effort of individuals that recognized the demand for a reactive, standardized API for relational database access.
+We want to thank all <a href="https://github.com/r2dbc/r2dbc-spi/graphs/contributors">contributing members</a> for their countless hours of work and discussion.</p>
+</div>
+<div class="paragraph">
+<p>Thanks also go to Ollie without whom this initiative would not even exist.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="introduction.following"><a class="anchor" href="#introduction.following"></a>1.5. Following Development</h3>
+<div class="paragraph">
+<p>For information on R2DBC source code repositories, nightly builds, and snapshot artifacts, see the <a href="https://r2dbc.io/resources/">R2DBC</a> homepage.
+You can help make R2DBC best serve the needs of the community by interacting with developers through the community.
+To follow developer activity, look for the mailing list information on the R2DBC homepage.
+If you encounter a bug or want to suggest an improvement, please create a ticket on the R2DBC issue tracker.
+R2DBC forms an open-source organization on GitHub bundling various projects (SPI, drivers) under R2DBC.</p>
+</div>
+<div class="paragraph">
+<p>To stay up to date with the latest news and announcements in the R2DBC eco system, subscribe to the mailing list. You can also follow the project team on Twitter (<a href="https://twitter.com/r2dbc">@R2DBC</a>).</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="introduction.project-metadata"><a class="anchor" href="#introduction.project-metadata"></a>1.6. Project Metadata</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>Version control: <a href="https://github.com/r2dbc/r2dbc-spi" class="bare">https://github.com/r2dbc/r2dbc-spi</a></p>
+</li>
+<li>
+<p>Mailing list: <a href="https://groups.google.com/forum/#!forum/r2dbc">https://groups.google.com/forum/#!forum/r2dbc</a></p>
+</li>
+<li>
+<p>Issue tracker: <a href="https://github.com/r2dbc/r2dbc-spi/issues" class="bare">https://github.com/r2dbc/r2dbc-spi/issues</a></p>
+</li>
+<li>
+<p>Release repository: <a href="https://repo.spring.io/libs-release" class="bare">https://repo.spring.io/libs-release</a></p>
+</li>
+<li>
+<p>Milestone repository: <a href="https://repo.spring.io/libs-milestone" class="bare">https://repo.spring.io/libs-milestone</a></p>
+</li>
+<li>
+<p>Snapshot repository: <a href="https://repo.spring.io/libs-snapshot" class="bare">https://repo.spring.io/libs-snapshot</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="goals"><a class="anchor" href="#goals"></a>2. Goals</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>This section outlines the goals for R2DBC and the design philosophy for its SPI.</p>
+</div>
+<div class="sect2">
+<h3 id="goals.enabling"><a class="anchor" href="#goals.enabling"></a>2.1. Enable Reactive Relational Database Connectivity</h3>
+<div class="paragraph">
+<p>The R2DBC specification aims for establishing an interface with a minimal API surface to integrate with relational databases using a reactive programming model.
+The most significant goals are honoring and embracing the properties of reactive programming:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Non-blocking I/O</p>
+</li>
+<li>
+<p>Deferred execution</p>
+</li>
+<li>
+<p>Treat application control as series of events (data, errors, completion)</p>
+</li>
+<li>
+<p>No longer assume control of resources but leave resource scheduling to the runtime/platform („React to resource availability“)</p>
+</li>
+<li>
+<p>Efficient usage of resources</p>
+</li>
+<li>
+<p>Leave flow control to be handled by the runtime</p>
+</li>
+<li>
+<p>Stream-oriented data consumption</p>
+</li>
+<li>
+<p>Functional programming within operators</p>
+</li>
+<li>
+<p>Remove assumptions over concurrency from the programming model and leave this aspect up the runtime</p>
+</li>
+<li>
+<p>Use back-pressure to allow flow control, to defer the actual execution and to not overwhelm consumers</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="goals.reactive-jvm"><a class="anchor" href="#goals.reactive-jvm"></a>2.2. Fit into Reactive JVM platforms</h3>
+<div class="paragraph">
+<p>R2DBC aims for seamless integration of reactive JVM platforms targeting Java as its primary platform.
+R2DBC should also be usable from other platforms such as Kotlin or Scala without scarifying its SPI for the sake of idiomatic use in a different platform.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="goals.standardization"><a class="anchor" href="#goals.standardization"></a>2.3. Offer vendor-neutral access to standard features</h3>
+<div class="paragraph">
+<p>R2DBC SPI strives to provide access to features that are commonly found across different vendor implementations.
+The goal here is providing a balance between features that are implemented in a driver and these that are better implemented in a client library.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="goals.vendor-specifics"><a class="anchor" href="#goals.vendor-specifics"></a>2.4. Embrace vendor-specific features</h3>
+<div class="paragraph">
+<p>Each database comes with its very own feature set and how these are implemented.
+R2DBC&#8217;s goal here is to define a minimal standard over commonly used functionality and allow for vendor-specific deviation.
+Drivers can implement additional functionality or make these transparent through R2DBC SPI.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="goals.sql"><a class="anchor" href="#goals.sql"></a>2.5. Keep the focus on SQL</h3>
+<div class="paragraph">
+<p>The focus of R2DBC is on accessing relational data from the Java programming language using databases that provide a SQL interface to interact with.</p>
+</div>
+<div class="paragraph">
+<p>The goal here is not to limit implementations to relational-only databases.
+Instead, providing guidance for uniform reactive data access using tabular data consumption patterns.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="goals.kiss"><a class="anchor" href="#goals.kiss"></a>2.6. Keep it minimal and simple</h3>
+<div class="paragraph">
+<p>R2DBC does not aim for being a general purpose data access API.</p>
+</div>
+<div class="paragraph">
+<p>R2DBC specializes in reactive data access and common usage patterns that result from relational data interaction.
+R2DBC does not aim for abstracting common functionality that needs to be re-implemented by driver vendors in a similar manner. It aims for leaving this functionality to client libraries of which there are typically fewer implementations than drivers.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="goals.foundation"><a class="anchor" href="#goals.foundation"></a>2.7. Provide a foundation for tools and higher-level APIs</h3>
+<div class="paragraph">
+<p>R2DBC SPI aims for being primarily consumed though client library implementations.</p>
+</div>
+<div class="paragraph">
+<p>It does not aim for being an end-user or application developer programming interface.</p>
+</div>
+<div class="paragraph">
+<p>Having a uniform reactive relational data access SPI makes R2DBC a valuable target platform for tool vendors and application developers who want to create portable tools and applications.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="goals.requirements"><a class="anchor" href="#goals.requirements"></a>2.8. Specify requirements unambiguously</h3>
+<div class="paragraph">
+<p>The requirements for R2DBC compliance should be unambiguous and easy to identify.
+The R2DBC specification and the API documentation (Javadoc) clarify which features are required and which are optional.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="compliance"><a class="anchor" href="#compliance"></a>3. Compliance</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>This chapter identifies the required features of a D2DBC driver implementation to claim compliance.
+Any not identified features are considered optional.</p>
+</div>
+<div class="sect2">
+<h3 id="compliance.definitions"><a class="anchor" href="#compliance.definitions"></a>3.1. Definitions</h3>
+<div class="paragraph">
+<p>To avoid ambiguity, we will use the following terms in the compliance section and across this specification:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><em>R2DBC driver implementation</em> (short: driver): A driver implementing the R2DBC SPI.
+A driver may provide support for features which are not implemented by the underlying database or expose functionality that is not declared by the R2DBC SPI (<em>"Extension"</em>).</p>
+</li>
+<li>
+<p><em>Supported feature</em>: A feature for which the R2DBC API implementation supports standard syntax and semantics.</p>
+</li>
+<li>
+<p><em>Partially supported feature</em>: A feature for which some methods are implemented via standard syntax and semantics and some required methods are not implemented, typically covered by <code>default</code> interface methods.</p>
+</li>
+<li>
+<p><em>Extension</em>: A feature that is not covered by R2DBC or a non-standard implementation of a feature that is covered.</p>
+</li>
+<li>
+<p><em>Fully implemented</em>: Term to express that an interface has all its methods implemented to support the semantics defined in this specification.</p>
+</li>
+<li>
+<p><em>Must implement</em>: Term to express that an interface must be implemented although some methods on the interface are considered optional. Methods that are not implemented rely on the <code>default</code> implementation.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="compliance.guidelines"><a class="anchor" href="#compliance.guidelines"></a>3.2. Guidelines and Requirements</h3>
+<div class="paragraph">
+<p>The following guidelines apply to R2DBC compliance:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>An R2DBC API should implement SQL support as its primary interface. R2DBC does not rely upon, nor does it presume a specific SQL version. SQL and aspects of statements can be entirely handled in the data source or as part of the driver.</p>
+</li>
+<li>
+<p>The specification consists of this specification document and specifications documented in each interface&#8217;s Javadoc.</p>
+</li>
+<li>
+<p>Drivers must support bind parameter markers.</p>
+</li>
+<li>
+<p>Drivers must support transactions.</p>
+</li>
+<li>
+<p>Drivers must support native and indexed access to column and parameter references.</p>
+</li>
+<li>
+<p>Index references to columns and parameters are zero-based. The first index begins with <code>0</code>.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="compliance.r2dbc"><a class="anchor" href="#compliance.r2dbc"></a>3.3. R2DBC API Compliance</h3>
+<div class="paragraph">
+<p>A driver that is compliant with the R2DBC specification must do the following:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Adhere to the guidelines and requirements above.</p>
+</li>
+<li>
+<p>Support <code>ConnectionFactory</code> discovery through Java Service Loader of <code>ConnectionFactoryProvider</code>.</p>
+</li>
+<li>
+<p>Implement a non-blocking I/O layer.</p>
+</li>
+<li>
+<p>Fully implement the following interfaces:</p>
+<div class="ulist">
+<ul>
+<li>
+<p><code>io.r2dbc.spi.ConnectionFactory</code></p>
+</li>
+<li>
+<p><code>io.r2dbc.spi.ConnectionFactoryMetadata</code></p>
+</li>
+<li>
+<p><code>io.r2dbc.spi.ConnectionFactoryProvider</code></p>
+</li>
+<li>
+<p><code>io.r2dbc.spi.Result</code></p>
+</li>
+<li>
+<p><code>io.r2dbc.spi.Row</code></p>
+</li>
+<li>
+<p><code>io.r2dbc.spi.RowMetadata</code></p>
+</li>
+<li>
+<p><code>io.r2dbc.spi.Batch</code></p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Must implement <code>io.r2dbc.spi.Statement</code> interface with the exception of the following optional methods:</p>
+<div class="ulist">
+<ul>
+<li>
+<p><code>returnGeneratedValues(…)</code>: Calling this method should be a no-op for drivers not supporting key generation.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Must implement <code>io.r2dbc.spi.ColumnMetadata</code> interface with the exception of the following optional methods:</p>
+<div class="ulist">
+<ul>
+<li>
+<p><code>getPrecision()</code></p>
+</li>
+<li>
+<p><code>getScale()</code></p>
+</li>
+<li>
+<p><code>getNullability()</code></p>
+</li>
+<li>
+<p><code>getJavaType()</code></p>
+</li>
+<li>
+<p><code>getNativeTypeMetadata()</code></p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>A driver can implement optional <a href="#extensions">Extensions</a> if it is able to provide extension functionality specified by R2DBC.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="overview"><a class="anchor" href="#overview"></a>4. Overview</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>R2DBC provides an API for Java programs to access one or more sources of data.
+In the majority of cases, the data source is a relational DBMS, and its data is accessed using SQL.
+R2DBC drivers are not limited to RDBMS but can be implemented on top of other data sources, including stream-oriented systems
+and object-oriented systems.
+A primary motivation for R2DBC API is providing a standard API for reactive applications to integrate with a wide variety of data sources.
+This chapter gives an overview of the API and the key concepts of the R2DBC API.</p>
+</div>
+<div class="sect2">
+<h3 id="overview.connection"><a class="anchor" href="#overview.connection"></a>4.1. Establishing a Connection</h3>
+<div class="paragraph">
+<p>R2DBC uses the <code>Connection</code> interface to define a logical connection API to the underlying data source.
+A structure of a connection depends on the actual requirements of a data source and how the driver implements these.</p>
+</div>
+<div class="paragraph">
+<p>In a typical scenario, an application using R2DBC connects to a target data source using one of two mechanisms:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>ConnectionFactories</code>: R2DBC SPI provides this fully implemented class. It provides <code>ConnectionFactory</code> discovery functionality for applications that want to obtain a connection without using vendor-specific API.
+When an application first attempts to connect to a data source, <code>ConnectionFactories</code> automatically loads any R2DBC driver found within the CLASSPATH using Java&#8217;s <code>ServiceLoader</code> mechanism.
+See <a href="#connections.factory.discovery">ConnectionFactory Discovery</a> for details on how to implement the discovery mechanism for a particular driver.</p>
+</li>
+<li>
+<p><code>ConnectionFactory</code>: A <code>ConnectionFactory</code> is implemented by a driver and provides access to <a href="#connections"><code>Connection</code></a> creation. An application that wants to configure vendor-specific aspects of a driver can use the vendor-specific <code>ConnectionFactory</code> creation mechanism to configure a <code>ConnectionFactory</code>.</p>
+</li>
+</ul>
+</div>
+<div class="sect3">
+<h4 id="overview.connection.discovery"><a class="anchor" href="#overview.connection.discovery"></a>4.1.1. Using <code>ConnectionFactory</code> Discovery</h4>
+<div class="paragraph">
+<p>As mentioned earlier, R2DBC supports the concept of discovery to find an appropriate driver for a connection request.
+Providing a <code>ConnectionFactory</code> to an application is typically a configuration-infrastructure task.
+Applications that wish to bootstrap an R2DBC client, typically handle this aspect directly in application code and so, discovery can become a task for application developers.</p>
+</div>
+<div class="paragraph">
+<p><code>ConnectionFactories</code> provides two standard mechanisms to bootstrap a <code>ConnectionFactory</code>:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>URL-based: R2DBC supports a uniform URL-based configuration scheme with a well-defined structure and well-known configuration properties. URLs are represented as Java <code>String</code> and can be passed to <code>ConnectionFactories</code> for <code>ConnectionFactory</code> lookup.</p>
+</li>
+<li>
+<p>Programmatic: In addition to a URL-based configuration, R2DBC provides a programmatic approach so applications can supply structured configuration options to obtain a <code>ConnectionFactory</code>.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>R2DBC embraces in addition to the two methods mentioned above a mixed mechanism as typical configuration infrastructure mixes URL- and programmatic-based configuration of data sources for enhanced flexibility.
+A typical use case is the separation of concerns in which data source coordinates are supplied using an URL while login credentials originate from a different configuration source.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="overview.connection.url"><a class="anchor" href="#overview.connection.url"></a>4.1.2. R2DBC Connection URL</h4>
+<div class="paragraph">
+<p>R2DBC defines a standard URL format that is an enhanced form of <a href="https://www.ietf.org/rfc/rfc3986.txt">RFC 3986 Uniform Resource Identifier (URI): Generic Syntax</a> and its amendments supported by Java&#8217;s <code>java.net.URI</code> type.</p>
+</div>
+<div class="paragraph">
+<p>Syntax Components from <a href="https://www.ietf.org/rfc/rfc3986.txt">RFC3986</a>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code>&nbsp;
+      URI         = scheme ":" driver [ ":" protocol ] ":" hier-part [ "?" query ] [ "#" fragment ]
+
+      scheme      = "r2dbc" / "r2dbcs"
+
+      driver      = ALPHA *( ALPHA )
+
+      protocol    = ALPHA *( ALPHA / DIGIT / "+" / "-" / "." / ":")
+
+      hier-part   = "//" authority path-abempty
+                  / path-absolute
+                  / path-rootless
+                  / path-empty
+
+      authority   = [ userinfo "@" ] host [ ":" port ] [ "," host [ ":" port ] ]
+
+      userinfo    = *( unreserved / pct-encoded / sub-delims / ":" )
+
+      host        = IP-literal / IPv4address / reg-name
+
+      port        = *DIGIT
+
+      query       = *( pchar / "/" / "?" )
+
+      fragment    = *( pchar / "/" / "?" )
+
+      pct-encoded = "%" HEXDIG HEXDIG
+
+      pchar       = unreserved / pct-encoded / sub-delims / ":" / "@"
+
+      sub-delims  = "!" / "$" / "&" / "'" / "(" / ")"
+                 / "*" / "+" / "," / ";" / "="
+
+      unreserved  = ALPHA / DIGIT / "-" / "." / "_" / "~"</code></pre>
+</div>
+</div>
+<div class="exampleblock">
+<div class="title">Example 1. R2DBC Connection URL</div>
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code>&nbsp;
+r2dbc:a-driver:pipes://localhost:3306/my_database?locale=en_US
+\___/ \______/ \___/   \____________/\__________/\___________/
+  |       |      |           |           |           |
+scheme  driver  protocol  authority    path        query</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>scheme: Identify that the URL is a valid R2DBC URL. Valid schemes are <code>r2dbc</code> and <code>r2dbcs</code> (configure SSL usage).</p>
+</li>
+<li>
+<p>driver: Identifier for a driver. R2DBC has no authority over driver identifiers.</p>
+</li>
+<li>
+<p>protocol: Used as optional protocol information to configure a driver-specific protocol. Protocols can be organized hierarchically and are separated by a colon (":").</p>
+</li>
+<li>
+<p>authority: Contains endpoint and authorization. The authority may contain a single host or a collection of hostnames/hostname and port tuples by separating these with a comma (",").</p>
+</li>
+<li>
+<p>path (Optional): Used as an initial schema/database name.</p>
+</li>
+<li>
+<p>query (Optional): Used to pass additional configuration options in the form of <code>String</code> key-value pairs using the key name as option name.</p>
+</li>
+<li>
+<p>fragment: Unused ("Reserved for future use")</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><code>ConnectionFactoryOptions.parse(String)</code> parses a R2DBC URL into <code>ConnectionFactoryOptions</code> using Standard- and optional Extended options.
+A R2DBC Connection URL is parsed into the following options (using <code>ConnectionFactoryOptions</code> constants):</p>
+</div>
+<div class="paragraph">
+<p>Example URL
+.R2DBC Connection URL</p>
+</div>
+<div class="exampleblock">
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code>r2dbc:a-driver:pipes://hello:world@localhost:3306/my_database?locale=en_US</code></pre>
+</div>
+</div>
+</div>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<caption class="title">Table 1. Parsed Standard Options</caption>
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Option</th>
+<th class="tableblock halign-left valign-top">URL Part</th>
+<th class="tableblock halign-left valign-top">Value as per Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ConnectionFactoryOptions.DRIVER</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>driver</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>a-driver</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ConnectionFactoryOptions.PROTOCOL</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>protocol</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>pipes</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ConnectionFactoryOptions.USER</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">User-part of <code>authority</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>hello</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ConnectionFactoryOptions.PASSWORD</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Password-part of <code>authority</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>world</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ConnectionFactoryOptions.HOST</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Host-part of <code>authority</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>localhost</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ConnectionFactoryOptions.PORT</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Port-part of <code>authority</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>3306</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ConnectionFactoryOptions.DATABASE</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>path</code> without leading <code>/</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>my_database</code></p></td>
+</tr>
+</tbody>
+</table>
+<table class="tableblock frame-all grid-all spread">
+<caption class="title">Table 2. Parsed Extended Options</caption>
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Option</th>
+<th class="tableblock halign-left valign-top">URL Part</th>
+<th class="tableblock halign-left valign-top">Value as per Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>locale</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">key-value tuple from <code>query</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>en_US</code></p></td>
+</tr>
+</tbody>
+</table>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+R2DBC defines well-known standard options that are available as runtime constants through <code>ConnectionFactories</code>. Additional options identifiers are created through <code>Option.valueOf(…)</code>.
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect3">
+<h4 id="overview.connection.usage"><a class="anchor" href="#overview.connection.usage"></a>4.1.3. Executing SQL and Retrieving Results</h4>
+<div class="paragraph">
+<p>TBD.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="connections"><a class="anchor" href="#connections"></a>5. Connections</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>R2DBC uses the <code>Connection</code> interface to define a logical connection API to the underlying data source.
+A structure of a connection depends on the actual requirements of a data source and how the driver implements these.</p>
+</div>
+<div class="paragraph">
+<p>The data source can be an RDBMS, a stream-oriented data system some other source of data with a corresponding R2DBC driver.
+A single application using R2DBC API may maintain multiple connections to either a single data source or across multiple data sources.
+From a R2DBC driver perspective, a <code>Connection</code> object represents a single client session.
+It has associated state information such as user ID and what transaction semantics are in effect.
+A <code>Connection</code> object is not thread-safe in the sense that it can be shared across multiple Threads that concurrently execute statements or change its state.
+A connection object can be shared across multiple Threads that execute operations serially using appropriate synchronization mechanisms.</p>
+</div>
+<div class="paragraph">
+<p>To obtain a connection, the application may interact with either:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>the <code>ConnectionFactories</code> class working with one or more <code>ConnectionFactoryProvider</code> implementations</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><strong>OR</strong></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>directly a <code>ConnectionFactory</code> implementation.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>See <a href="#overview.connection">Establishing a Connection</a> for more details.</p>
+</div>
+<div class="sect2">
+<h3 id="connections.factory"><a class="anchor" href="#connections.factory"></a>5.1. The <code>ConnectionFactory</code> Interface</h3>
+<div class="paragraph">
+<p>R2DBC drivers must implement the <code>ConnectionFactory</code> interface as a mandatory part of the SPI.
+Drivers can provide multiple <code>ConnectionFactory</code> implementations depending on the used protocol or aspects that require the use of a different <code>ConnectionFactory</code> implementation.</p>
+</div>
+<div class="exampleblock">
+<div class="title">Example 2. <code>ConnectionFactory</code> Interface</div>
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">public interface ConnectionFactory {
+
+    Publisher&lt;? extends Connection&gt; create();
+
+    ConnectionFactoryMetadata getMetadata();
+
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p>The following rules apply:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>A <code>ConnectionFactory</code> represents a resource factory for deferred connection creation.
+It may create connections by itself, wrap a <code>ConnectionFactory</code> or apply connection pooling on top of a <code>ConnectionFactory</code>.</p>
+</li>
+<li>
+<p>A <code>ConnectionFactory</code> provides metadata about the driver itself through <code>ConnectionFactoryMetadata</code>.</p>
+</li>
+<li>
+<p>A <code>ConnectionFactory</code> uses deferred initialization and should initiate connection resource allocation after requesting the item (<code>Subscription.request(1)</code>).</p>
+</li>
+<li>
+<p>Connection creation must emit exactly one <code>Connection</code> or an error signal.</p>
+</li>
+<li>
+<p>Connection creation must be cancellable (<code>Subscription.cancel()</code>). Canceling connection creation must release ("close") the connection and all associated resources.</p>
+</li>
+<li>
+<p>A <code>ConnectionFactory</code> should expect that it can be wrapped. Wrappers must implement the <code>Wrapped&lt;ConnectionFactory&gt;</code> interface and return the underlying <code>ConnectionFactory</code> when <code>Wrapped.unwrap()</code> gets called.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><strong>ConnectionFactory Metadata</strong></p>
+</div>
+<div class="paragraph">
+<p>ConnectionFactories are required to expose metadata to identify the driver (<code>ConnectionFactory</code>) and its capabilities.
+Metadata must not require a connection to a data source.</p>
+</div>
+<div class="exampleblock">
+<div class="title">Example 3. <code>ConnectionFactoryMetadata</code> Interface</div>
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">public interface ConnectionFactoryMetadata {
+
+    String getName();
+
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p>See the R2DBC SPI Specification for more details.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="connections.factory.discovery"><a class="anchor" href="#connections.factory.discovery"></a>5.2. <code>ConnectionFactory</code> Discovery Mechanism</h3>
+<div class="paragraph">
+<p>As part of its usage, the <code>ConnectionFactories</code> class attempts to load any R2DBC driver classes referenced
+by the <code>ConnectionFactoryProvider</code> interface listed in the Java Service Provider manifests available on the CLASSPATH.</p>
+</div>
+<div class="paragraph">
+<p>Drivers must include the file <code>META-INF/services/io.r2dbc.spi.ConnectionFactoryProvider</code>.
+This file contains the name of the R2DBC driver&#8217;s implementation (or implementations) of <code>io.r2dbc.spi.ConnectionFactoryProvider</code>.
+To ensure that drivers can be loaded using this mechanism, <code>io.r2dbc.spi.ConnectionFactoryProvider</code> implementations are required to provide a no-argument constructor.</p>
+</div>
+<div class="exampleblock">
+<div class="title">Example 4. META-INF/services/io.r2dbc.spi.ConnectionFactoryProvider file contents</div>
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code>com.example.ConnectionFactoryProvider</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="exampleblock">
+<div class="title">Example 5. <code>ConnectionFactoryProvider</code> Interface</div>
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">public interface ConnectionFactoryProvider {
+
+    ConnectionFactory create(ConnectionFactoryOptions connectionFactoryOptions);
+
+    boolean supports(ConnectionFactoryOptions connectionFactoryOptions);
+
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p><code>ConnectionFactories</code> uses a <code>ConnectionFactoryOptions</code> object to lookup a matching driver using a two-step model:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Lookup of an adequate <code>ConnectionFactoryProvider</code>.</p>
+</li>
+<li>
+<p>Obtain the <code>ConnectionFactory</code> from the <code>ConnectionFactoryProvider</code>.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p><code>ConnectionFactoryProvider</code> implementations are required to return a <code>boolean</code> indicator whether they support a specific configuration represented by <code>ConnectionFactoryOptions</code>.
+Drivers must expect any plurality of <code>Option</code>s to be configured.
+Drivers must report that they support a configuration only if the <code>ConnectionFactoryProvider</code> can provide a <code>ConnectionFactory</code> based on the given <code>ConnectionFactoryOptions</code>.
+Drivers should gracefully fail if a <code>ConnectionFactory</code> creation through <code>ConnectionFactoryProvider.create(…)</code> is not possible.</p>
+</div>
+<div class="paragraph">
+<p>See the R2DBC SPI Specification for more details.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="connections.factory.options"><a class="anchor" href="#connections.factory.options"></a>5.3. The <code>ConnectionFactoryOptions</code> Class</h3>
+<div class="paragraph">
+<p>The <code>ConnectionFactoryOptions</code> class represents a configuration to request a <code>ConnectionFactory</code> from a <code>ConnectionFactoryProvider</code>.
+It represents the <a href="#overview.connection">programmatic connection creation</a> approach without using driver-specific classes.
+<code>ConnectionFactoryOptions</code> instances are created using the builder pattern and properties are configured through <code>Option&lt;T&gt;</code> identifiers.
+A <code>ConnectionFactoryOptions</code> is immutable once created.
+<code>Option</code> objects are reused as part of the built-in constant pool.
+Options are identified by a literal.</p>
+</div>
+<div class="paragraph">
+<p><code>ConnectionFactoryOptions</code> defines a set of well-known options:</p>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<caption class="title">Table 3. Well-known Options</caption>
+<colgroup>
+<col style="width: 25%;">
+<col style="width: 25%;">
+<col style="width: 25%;">
+<col style="width: 25%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Constant</th>
+<th class="tableblock halign-left valign-top">Literal</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>DRIVER</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>driver</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>java.lang.String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Driver identifier.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>PROTOCOL</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>protocol</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>java.lang.String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Protocol details such as the network protocol used to communicate with a server.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>USER</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>user</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>java.lang.String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">User account name.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>PASSWORD</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>password</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>java.lang.CharSequence</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">User or database password.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>HOST</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>host</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>java.lang.String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Database server name.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>PORT</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>port</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>java.lang.Integer</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Database server port number.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>DATABASE</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>database</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>java.lang.String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Name of the particular database on a server.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>CONNECT_TIMEOUT</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>connectTimeout</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>java.time.Duration</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Connection timeout to obtain a connection.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>The following rules apply:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>The set of options is extensible.</p>
+</li>
+<li>
+<p>Drivers can declare which well-known options that they require and which they support.</p>
+</li>
+<li>
+<p>Drivers can declare which extended options they require and which they support.</p>
+</li>
+<li>
+<p>Drivers should not fail in creating a connection if more options are declared than the driver consumes as a <code>ConnectionFactory</code> should expect to be wrapped.</p>
+</li>
+</ul>
+</div>
+<div class="exampleblock">
+<div class="title">Example 6. Configuration of <code>ConnectionFactoryOptions</code></div>
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">ConnectionFactoryOptions options = ConnectionFactoryOptions.builder()
+    .option(ConnectionFactoryOptions.HOST, "…")
+    .option(Option.valueOf("tenant"), "…")
+    .option(Option.sensitiveValueOf("encryptionKey"), "…")
+    .build();</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p>See the R2DBC SPI Specification for more details.</p>
+</div>
+</div>
+<div class="sect2">
+<h3>5.4. Obtaining <code>Connection</code> Objects</h3>
+<div class="paragraph">
+<p>Once a <code>ConnectionFactory</code> is bootstrapped, connections are obtained from the <code>create()</code> method.</p>
+</div>
+<div class="exampleblock">
+<div class="title">Example 7. Obtaining a <code>Connection</code></div>
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">// factory is a ConnectionFactory object
+Publisher&lt;? extends Connection&gt; publisher = factory.create();</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p>The connection is active once it was emitted by the <code>Publisher</code> and must be released ("closed") once it is no longer in use.</p>
+</div>
+</div>
+<div class="sect2">
+<h3>5.5. Closing <code>Connection</code> Objects</h3>
+<div class="paragraph">
+<p>Calling <code>Connection.close()</code> prepares a close handle to release the connection and its associated resources.
+Connections must be closed to ensure proper resource management.</p>
+</div>
+<div class="exampleblock">
+<div class="title">Example 8. Closing a <code>Connection</code></div>
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">// connection is a ConnectionFactory object
+Publisher&lt;Void&gt; close = connection.create();</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p>See the R2DBC SPI Specification for more details.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="statements"><a class="anchor" href="#statements"></a>6. Statements</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>This section describes the <code>Statement</code> interface. It also describes related topics, including parameterized statement and auto-generated keys.</p>
+</div>
+<div class="sect2">
+<h3 id="statements.interface"><a class="anchor" href="#statements.interface"></a>6.1. The Statement Interface</h3>
+<div class="paragraph">
+<p>The <code>Statement</code> interface defines methods for executing SQL statements. SQL statements may contain parameter bind markers for input parameters.</p>
+</div>
+<div class="sect3">
+<h4 id="statements.creating"><a class="anchor" href="#statements.creating"></a>6.1.1. Creating Statements</h4>
+<div class="paragraph">
+<p><code>Statement</code> objects are created by <code>Connection</code> objects, as is done in the following example:</p>
+</div>
+<div class="exampleblock">
+<div class="title">Example 9. Creating a non-parameterized <code>Statement</code></div>
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">// connection is a Connection object
+Statement statement = connection.createStatement("SELECT title FROM books");</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p>Each <code>Connection</code> object can create multiple <code>Statement</code> objects that may be used concurrently by the program and executed at any time.
+Resources that are associated with a statement are released as soon as the connection is closed.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="statements.executing"><a class="anchor" href="#statements.executing"></a>6.1.2. Executing Statement Objects</h4>
+<div class="paragraph">
+<p><code>Statement</code> objects are executed by calling the <code>execute()</code> method. Depending on the SQL, the resulting <code>Publisher</code> may return one to many <code>Result</code> objects. A <code>Statement</code> is always associated with its <code>Connection</code>, therefore, the connection state affects <code>Statement</code> execution at execution time.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Executing a <code>Statement</code></p>
+</li>
+</ol>
+</div>
+<div class="exampleblock">
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">// statement is a Statement object
+Publisher&lt;? extends Result&gt; publisher = statement.execute();</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="statements.parameterized"><a class="anchor" href="#statements.parameterized"></a>6.2. Parameterized Statements</h3>
+<div class="paragraph">
+<p>SQL used to create a statement can be parameterized using vendor-specific bind markers.
+Portability of SQL statements across R2DBC implementation is a non-goal.</p>
+</div>
+<div class="paragraph">
+<p>Parameterized <code>Statement</code> objects are created by <code>Connection</code> objects in the same manner as non-parameterized <code>Statements</code>. See the the following example:</p>
+</div>
+<div class="exampleblock">
+<div class="title">Example 10. Creating three parameterized <code>Statement</code> objects using vendor-specific parameter bind markers</div>
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">// connection is a Connection object
+Statement statement1 = connection.createStatement("SELECT title FROM books WHERE author = :author");
+
+Statement statement2 = connection.createStatement("SELECT title FROM books WHERE author = @P0");
+
+Statement statement3 = connection.createStatement("SELECT title FROM books WHERE author = $1");</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p>Parameter bind markers are identified by the <code>Statement</code> object.
+Parameterized statements may be cached by R2DBC implementations for resuse (e.g. for prepared statement execution).</p>
+</div>
+<div class="sect3">
+<h4 id="statements.bind"><a class="anchor" href="#statements.bind"></a>6.2.1. Binding Parameters</h4>
+<div class="paragraph">
+<p>The <code>Statement</code> interface defines <code>bind(…)</code> and <code>bindNull(…)</code> methods to provide parameter values for bind marker substitution.
+The parameter type is defined by the actual value that is bound to a parameter.
+Each bind method accepts two arguments. The first is either ordinal parameter position starting at <code>0</code> (zero) or the parameter placeholder representation.
+The second and any remaining parameters specify the value to be assigned to the parameter.</p>
+</div>
+<div class="exampleblock">
+<div class="title">Example 11. Binding parameters to a <code>Statement</code> object by placeholder</div>
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">// connection is a Connection object
+Statement statement = connection.createStatement("SELECT title FROM books WHERE author = $1 and publisher = $2");
+statement.bind("$1", "John Doe");
+statement.bind("$2", "Happy Books LLC");</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p>Alternatively, parameters can be bound by index:</p>
+</div>
+<div class="exampleblock">
+<div class="title">Example 12. Binding parameters to a <code>Statement</code> object by index</div>
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">// connection is a Connection object
+Statement statement = connection.createStatement("SELECT title FROM books WHERE author = $1 and publisher = $2");
+statement.bind(0, "John Doe");
+statement.bind(1, "Happy Books LLC");</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p>A value must be provided for each bind marker in the <code>Statement</code> object before it can be executed.
+The method used to execute a parameterized <code>Statement</code> an <code>IllegalStateException</code> if a value is not supplied for a bind marker.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="statements.batching"><a class="anchor" href="#statements.batching"></a>6.2.2. Batching</h4>
+<div class="paragraph">
+<p>Parameterized <code>Statement</code> objects accept multiple parameter binding sets submit a batch of commands to the database for execution.
+Batch execution is initiated by invoking the <code>add()</code> method on the <code>Statement</code> object after providing all parameters.
+After calling <code>add()</code>, the next set of parameter bindings is provided by calling bing methods accordingly.</p>
+</div>
+<div class="exampleblock">
+<div class="title">Example 13. Executing a <code>Statement</code> batch</div>
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">// connection is a Connection object
+Statement statement = connection.createStatement("INSERT INTO books (author, publisher) VALUES ($1, $2)");
+statement.bind(0, "John Doe").bind(1, "Happy Books LLC").add();
+statement.bind(0, "Jane Doe").bind(1, "Scary Books Inc");
+Publisher&lt;? extends Result&gt; publisher = statement.execute();</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p>Batch execution emits one to many <code>Result</code> objects depending on how the implementation executes the batch.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="statements.null"><a class="anchor" href="#statements.null"></a>6.2.3. Setting <code>NULL</code> Parameters</h4>
+<div class="paragraph">
+<p>The method <code>bindNull</code> can be used to set any parameter to <code>NULL</code>.
+It takes two parameters, either the ordinal position of the bind marker or the name, and the value type of the parameter.</p>
+</div>
+<div class="exampleblock">
+<div class="title">Example 14. Setting a <code>NULL</code> value.</div>
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">// statement is a Statement object
+statement.bindNull(0, String.class);</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="statements.generated-values"><a class="anchor" href="#statements.generated-values"></a>6.3. Retrieving Auto Generated Values</h3>
+<div class="paragraph">
+<p>Many database systems provide a mechanism that automatically generates a value when inserting a row.
+The value that is generated may or may not be unique or represent a key value depending on the executed SQL, and table definition.
+The method <code>returnGeneratedValues</code>, which can be called to retrieve the generated value, indicates to the <code>Statement</code> object to retrieve generated values. The method accepts a var-arg parameter to specify the column name(s) for which to return generated keys.
+The emitted <code>Result</code> exposes a column for each automatically generated value taking the column name hint into account.</p>
+</div>
+<div class="exampleblock">
+<div class="title">Example 15. Retrieving auto-generated values</div>
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">// connection is a Connection object
+Statement statement = connection.createStatement("INSERT INTO books (author, publisher) VALUES ('John Doe', 'Happy Books LLC')").returnGeneratedValues("id");
+Publisher&lt;? extends Result&gt; publisher = statement.execute();
+
+// later
+result.map((row, metadata) -&gt; row.get("id"));</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p>When not specifying column name(s), the R2DBC driver implementation will determine the columns or value to return.</p>
+</div>
+<div class="paragraph">
+<p>See the R2DBC SPI Specification for more details.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="batches"><a class="anchor" href="#batches"></a>7. Batches</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>This section describes the <code>Batch</code> interface.</p>
+</div>
+<div class="sect2">
+<h3 id="batches.interface"><a class="anchor" href="#batches.interface"></a>7.1. The Batch Interface</h3>
+<div class="paragraph">
+<p>The <code>Batch</code> interface defines methods for executing SQL statements. SQL statements may not contain parameter bind markers for input parameters.
+A batch is created to execute multiple SQL statements for performance reasons.</p>
+</div>
+<div class="sect3">
+<h4 id="batches.creating"><a class="anchor" href="#batches.creating"></a>7.1.1. Creating Batches</h4>
+<div class="paragraph">
+<p><code>Batch</code> objects are created by <code>Connection</code> objects, as is done in the following example:</p>
+</div>
+<div class="exampleblock">
+<div class="title">Example 16. Creating a <code>Batch</code></div>
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">// connection is a Connection object
+Batch batch = connection.createBatch();</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p>Each <code>Connection</code> object can create multiple <code>Batch</code> objects that may be used concurrently by the program and executed at any time.
+Resources that are associated with a batch are released as soon as the connection is closed.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="batches.executing"><a class="anchor" href="#batches.executing"></a>7.1.2. Executing Batch Objects</h4>
+<div class="paragraph">
+<p><code>Batch</code> objects are executed by calling the <code>execute()</code> method after adding one or more SQL statements to a <code>Batch</code>.
+The resulting <code>Publisher</code> returns a  <code>Result</code> object for each statement in the batch. A <code>Batch</code> is always associated with its <code>Connection</code>, therefore, the connection state affects <code>Batch</code> execution at execution time.</p>
+</div>
+<div class="exampleblock">
+<div class="title">Example 17. Executing a <code>Batch</code></div>
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">// connection is a Connection object
+Batch batch = connection.createBatch();
+Publisher&lt;? extends Result&gt; publisher = batch.add("SELECT title, author FROM books")
+    .add("INSERT INTO books VALUES('John Doe', 'HappyBooks LLC')
+    .execute();</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p>See the R2DBC SPI Specification for more details.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="results"><a class="anchor" href="#results"></a>8. Results</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>This section explains the <code>Result</code> interface and the related <code>Row</code> interface. It also describes related topics including result consumption.</p>
+</div>
+<div class="sect2">
+<h3 id="results.characteristics"><a class="anchor" href="#results.characteristics"></a>8.1. Result Characteristics</h3>
+<div class="paragraph">
+<p><code>Result</code> objects are forward-only and read-only objects that allow consumption of two result types:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Tabular results</p>
+</li>
+<li>
+<p>Update count</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Results move forward from the first <code>Row</code> to the last one. After emitting the last row, a <code>Result</code> object gets invalidated and rows from the same <code>Result</code> object cannot be longer consumed.
+Rows contained in the result depend on how the underlying database materializes the results.
+That is, it contains the rows that satisfy the query at either the time the query is executed or as the rows are retrieved.
+An R2DBC driver can obtain a Result either directly or by using cursors.</p>
+</div>
+<div class="paragraph">
+<p><code>Result</code> reports the number of rows affected for SQL statements such as update for SQL Data Manipulation Language (DML) statements.
+The update count may be empty for statements that do not modify rows.
+After emitting the update count, a <code>Result</code> object gets invalidated and rows from the same <code>Result</code> object cannot be longer consumed.</p>
+</div>
+<div class="exampleblock">
+<div class="title">Example 18. Consuming update count</div>
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">// result is a Result object
+Publisher&lt;Integer&gt; rowsUpdated = result.getRowsUpdated();</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p>The streaming nature of a result allows either consumption of tabular results or update count.
+Depending on how the underlying database materializes results, an R2DBC driver can lift this limitation.</p>
+</div>
+<div class="paragraph">
+<p>A <code>Result</code> object is emitted for each statement result in a forward-only direction.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="results.creating"><a class="anchor" href="#results.creating"></a>8.2. Creating <code>Result</code> Objects</h3>
+<div class="paragraph">
+<p>A <code>Result</code> object is most often created as the result of executing a <code>Statement</code> object.
+The <code>Statement</code> method <code>execute()</code> returns a <code>Publisher</code> that emits <code>Result</code> objects as result of statement execution.</p>
+</div>
+<div class="exampleblock">
+<div class="title">Example 19. Creating a <code>Result</code> object</div>
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">// connection is a Connection object
+Statement statement = connection.createStatement("SELECT title, author FROM books");
+Publisher&lt;? extends Result&gt; results = statement.execute();</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code>Result</code> object will emit a <code>Row</code> for each row in the table <code>books</code>, containing the two columns <code>title</code> and <code>author</code>.
+The following sections detail how these rows and columns can be consumed.</p>
+</div>
+<div class="sect3">
+<h4 id="results.cursor"><a class="anchor" href="#results.cursor"></a>8.2.1. Cursor Movement</h4>
+<div class="paragraph">
+<p><code>Result</code> objects can be backed by direct results (i. e. a query that returns results directly) or by cursors.
+By consuming <code>Row</code> objects, an R2DBC driver advances the cursor position.
+Thus external cursor navigation is not possible.</p>
+</div>
+<div class="paragraph">
+<p>Canceling subscription of tabular results stops cursor reads and releases resources associated with the <code>Result</code> object.</p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="rows"><a class="anchor" href="#rows"></a>8.3. Rows</h3>
+<div class="paragraph">
+<p>A <code>Row</code> object represents a single row of tabular results.</p>
+</div>
+<div class="sect3">
+<h4 id="row.values"><a class="anchor" href="#row.values"></a>8.3.1. Retrieving Values</h4>
+<div class="paragraph">
+<p>The <code>Result</code> interface provides a <code>map(…)</code> method for retrieving values from <code>Row</code> objects.
+The <code>map</code> method accepts <code>BiFunction</code> (also referred to as mapping function) object that accepts <code>Row</code> and <code>RowMetadata</code>.
+The mapping function is called upon row emission with <code>Row</code> and <code>RowMetadata</code> objects.
+A <code>Row</code> is only valid during the mapping function callback and are invalid outside of the mapping function callback.
+Thus <code>Row</code> objects must be entirely consumed in the mapping function.</p>
+</div>
+<div class="paragraph">
+<p>The section <a href="#rowmetadata">Column and Row Metadata</a> contains additional details on metadata.</p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="row.methods"><a class="anchor" href="#row.methods"></a>8.4. Interface Methods</h3>
+<div class="paragraph">
+<p>The following methods are available on the <code>Row</code> interface:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>Object get(Object)</code></p>
+</li>
+<li>
+<p><code>&lt;T&gt; T get(Object, Class&lt;T&gt;)</code></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Both <code>get</code> methods accept a column identifier that can be either the column name or the column index.
+Column names used as input to the <code>get</code> methods are case insensitive.
+Column names do not necessarily reflect the column names how they are in the underlying tables but rather how columns are represented (e.g. aliased) in the result.</p>
+</div>
+<div class="exampleblock">
+<div class="title">Example 20. Creating and Consuming a <code>Row</code> using its index</div>
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">// result is a Result object
+Publisher&lt;Object&gt; values = result.map((row, rowMetadata) -&gt; row.get(0));</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="exampleblock">
+<div class="title">Example 21. Creating and Consuming a <code>Row</code> through its column name</div>
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">// result is a Result object
+Publisher&lt;Object&gt; titles = result.map((row, rowMetadata) -&gt; row.get("title"));</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p>Calling <code>get</code> without specifying a target type returns a suitable value representation according to <a href="#datatypes.mapping">Mapping of Data Types</a>.
+Specifying a target type, the R2DBC driver attempts to convert the value to the target type.</p>
+</div>
+<div class="exampleblock">
+<div class="title">Example 22. Creating and Consuming a <code>Row</code> with type conversion</div>
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">// result is a Result object
+Publisher&lt;String&gt; values = result.map((row, rowMetadata) -&gt; row.get(0, String.class));</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="exampleblock">
+<div class="title">Example 23. Consuming multiple columns from a <code>Row</code></div>
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">// result is a Result object
+Publisher&lt;Book&gt; values = result.map((row, rowMetadata) -&gt; {
+    String title = row.get("title", String.class);
+    String author = row.get("author", String.class);
+
+    return new Book(title, author);
+});</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p>When the column value in the database is SQL <code>NULL</code>, it may be returned to the Java application as <code>null</code>.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<code>null</code> values cannot be returned as Reactive Streams values and must be wrapped for subsequent usage.
+</td>
+</tr>
+</table>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+Invalidating a <code>Row</code> does <strong>not</strong> release <code>Blob</code> and <code>Clob</code> objects that were obtained from the <code>Row</code>. These objects remain valid for at least the duration of the transaction in which they were created unless their <code>discard()</code> method is called.
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="rowmetadata"><a class="anchor" href="#rowmetadata"></a>9. Column and Row Metadata</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The <code>RowMetadata</code> interface is implemented by R2DBC drivers to provide information about tabular results.
+It is used primarily by libraries and applications to determine the properties of a row and its columns.</p>
+</div>
+<div class="paragraph">
+<p>In cases where the result properties of a SQL statement are unknown until execution, the <code>RowMetadata</code> can be used to determine the actual properties of a row.</p>
+</div>
+<div class="paragraph">
+<p><code>RowMetadata</code> exposes <code>ColumnMetadata</code> for each column in the result.
+Drivers should provide <code>ColumnMetadata</code> on a best-effort basis.
+Column metadata is typically a by-product of statement execution.
+The amount of available information is vendor-dependent.
+Metadata retrieval can require additional lookups (internal query execution) to provide a complete metadata descriptor.
+Issuing queries during result processing conflicts with the streaming nature of R2DBC and so <code>ColumnMetadata</code> declares two sets of methods: Methods that must be implemented and methods that can optionally be implemented by drivers.</p>
+</div>
+<div class="sect2">
+<h3>9.1. Obtaining a <code>RowMetadata</code> Object</h3>
+<div class="paragraph">
+<p>A <code>RowMetadata</code> object is created during tabular results consumption through <code>Result.map(…)</code>.
+It is created for each row. The following example illustrates retrieval and usage using an anonymous inner class:</p>
+</div>
+<div class="exampleblock">
+<div class="title">Example 24. Using <code>RowMetadata</code> and retieving <code>ColumnMetadata</code></div>
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">// result is a Result object
+result.map(new BiFunction&lt;Row, RowMetadata, Object&gt;() {
+
+    @Override
+    public Object apply(Row row, RowMetadata rowMetadata) {
+        ColumnMetadata my_column = rowMetadata.getColumnMetadata("my_column");
+        ColumnMetadata.Nullability nullability = my_column.getNullability();
+        // …
+    }
+})</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="columnmetadata"><a class="anchor" href="#columnmetadata"></a>9.2. Retrieving <code>ColumnMetadata</code></h3>
+<div class="paragraph">
+<p><code>RowMetadata</code> methods are used to retrieve metadata for a single or all columns.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>getColumnMetadata(…)</code> returns the <code>ColumnMetadata</code> by using a column identifier. The identifier is either a zero-based index or the column name, see <a href="#compliance.guidelines">Guidelines and Requirements</a>.</p>
+</li>
+<li>
+<p><code>getColumnMetadatas()</code> returns an unmodifiable collection of <code>ColumnMetadata</code> objects.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3>9.3. Retrieving General Information for a Column</h3>
+<div class="paragraph">
+<p><code>ColumnMetadata</code> declares methods to access column metadata on a best-effort basis.
+Column metadata that is available as a by-product of statement execution must be made available through <code>ColumnMetadata</code>.
+Metadata exposure requiring interaction with the database (e.g. issuing queries to information schema entities to resolve type properties) should not be exposed as methods on <code>ColumnMetadata</code> are expected to be non-blocking.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+Implementation note: Drivers can use metadata from a static mapping or obtain metadata indexes on connection creation.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>The following example illustrates how to consume <code>ColumnMetadata</code> using lambdas:</p>
+</div>
+<div class="exampleblock">
+<div class="title">Example 25. Retrieving <code>ColumnMetadata</code> information</div>
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">// row is a RowMetadata object
+row.getColumnMetadatas().forEach(columnMetadata -&gt; {
+
+    String name = columnMetadata.getName();
+    Integer precision = columnMetadata.getPrecision();
+    Integer scale = columnMetadata.getScale();
+});</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p>See the API specification for more details.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="exceptions"><a class="anchor" href="#exceptions"></a>10. Exceptions</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>This section explains how R2DBC uses and declares exceptions to provide information about various types of failures.</p>
+</div>
+<div class="paragraph">
+<p>An exception is thrown by a driver when an error occurs during interaction with the driver or a data source.
+R2DBC differentiates between generic and data source-specific error cases.</p>
+</div>
+<div class="sect2">
+<h3 id="exceptions.general"><a class="anchor" href="#exceptions.general"></a>10.1. General Exceptions</h3>
+<div class="sect3">
+<h4 id="exceptions.iae"><a class="anchor" href="#exceptions.iae"></a>10.1.1. <code>IllegalArgumentException</code></h4>
+<div class="paragraph">
+<p>Drivers throw <code>IllegalArgumentException</code> if a method has been received an illegal or inappropriate argument, such as values that are out of bounds or an expected parameter is <code>null</code>. This exception is a generic exception that is not associated with an error code or a SQLState.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="exceptions.ise"><a class="anchor" href="#exceptions.ise"></a>10.1.2. <code>IllegalStateException</code></h4>
+<div class="paragraph">
+<p>Drivers throw <code>IllegalStateException</code> if a method has received an argument  that is invalid in the current state when an argument-less method is invoked in a state that does not allow execution in the current state, such as interacting with a connection object which is closed. This exception is a generic exception that is not associated with an error code or a SQLState.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="exceptions.uoe"><a class="anchor" href="#exceptions.uoe"></a>10.1.3. <code>UnsupportedOperationException</code></h4>
+<div class="paragraph">
+<p>Drivers throw <code>UnsupportedOperationException</code> if the driver does not support certain functionality, such as a method implementation cannot be provided. This exception is a generic exception that is not associated with an error code or a SQLState.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="exceptions.r2e"><a class="anchor" href="#exceptions.r2e"></a>10.1.4. <code>R2dbcException</code></h4>
+<div class="paragraph">
+<p>Drivers throw an instance of <code>R2dbcException</code> when an error occurs during an interaction with a data source.</p>
+</div>
+<div class="paragraph">
+<p>The exception contains the following information:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>A textual description of the error. The <code>String</code> containing the description can be retrieved by invoking <code>R2dbcException.getMessage()</code>. Drivers may provide a localized message variant.</p>
+</li>
+<li>
+<p>A SQLState. The <code>String</code> containing the <code>String</code> can be retrieved by calling the method <code>R2dbcException.getSqlState()</code>.
+The value of the SQLState string will depend on the underlying data source.</p>
+</li>
+<li>
+<p>An error code. The code is an integer value identifying the error that caused the <code>R2dbcException</code> to be thrown. Its value and meaning are implementation specific and may be the actual error code returned by the underlying data source. The error code can be retrieved using the <code>R2dbcException.getErrorCode()</code> method.</p>
+</li>
+<li>
+<p>A cause. This is another <code>Throwable</code> which caused this <code>R2dbcException</code> to occur.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="exceptions.categorized"><a class="anchor" href="#exceptions.categorized"></a>10.2. Categorized Exceptions</h3>
+<div class="paragraph">
+<p>Categorized exceptions provide a standard mapping to common error states. An R2DBC driver should provide specific subclasses to indicate affinity with the driver.
+Categorized exceptions provide a standardized approach for R2DBC clients and R2DBC users to translate common exceptions into an application-specific state without the need to implement an SQLState-based exception translation resulting in more portable error-handling code.</p>
+</div>
+<div class="paragraph">
+<p>R2DBC categorizes exceptions into two top-level categories:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>R2dbcNonTransientException</code></p>
+</li>
+<li>
+<p><code>R2dbcTransientException</code></p>
+</li>
+</ul>
+</div>
+<div class="sect3">
+<h4 id="exceptions.categorized.non-transient"><a class="anchor" href="#exceptions.categorized.non-transient"></a>10.2.1. Non-Transient Exceptions</h4>
+<div class="paragraph">
+<p>A non-transient exception must extend the abstract class <code>R2dbcNonTransientException</code>.
+A non-transient exception is thrown when a retry of the same operation would fail unless the cause of the is corrected.
+After a non-transient exception other than <code>R2dbcNonTransientResourceException</code>, the application may assume that a connection is still valid.</p>
+</div>
+<div class="paragraph">
+<p>R2DBC defines the following subclasses of non-transient exceptions:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>R2dbcBadGrammarException</code>: thrown when the SQL statement has a problem in its syntax.</p>
+</li>
+<li>
+<p><code>R2dbcDataIntegrityViolationException</code>:  thrown when an attempt to insert or update data results in a violation of an integrity constraint.</p>
+</li>
+<li>
+<p><code>R2dbcPermissionDeniedException</code>: thrown when the underlying resource denied a permission to access a specific element, such as a specific database table.</p>
+</li>
+<li>
+<p><code>R2dbcNonTransientException</code>: thrown when a resource fails completely and the failure is permanent. A connection may not be considered valid if this exception is thrown.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect3">
+<h4 id="exceptions.categorized.transient"><a class="anchor" href="#exceptions.categorized.transient"></a>10.2.2. Transient Exceptions</h4>
+<div class="paragraph">
+<p>A transient exception must extend the abstract class <code>R2dbcTransientException</code>.
+A transient exception is thrown when a previously failed operation might be able to succeed if the operation is retried without any intervention an application-level functionality.
+After a non-transient exception other than <code>R2dbcTransientResourceException</code>, the application may assume that a connection is still valid.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>R2dbcRollbackException</code>: thrown when an attempt to commit a transaction resulted in an unexpected rollback due to deadlock or transaction serialization failures.</p>
+</li>
+<li>
+<p><code>R2dbcTimeoutException</code>: thrown when the timeout specified by a database operation (query, login) is exceeded. This could have different causes depending on the database API in use but most likely thrown after the database interrupts or stops the processing of a query before it has completed.</p>
+</li>
+<li>
+<p><code>R2dbcNonTransientException</code>: thrown when a resource fails temporarily and the operation can be retried. A connection may not be considered valid if this exception is thrown.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="datatypes"><a class="anchor" href="#datatypes"></a>11. Data Types</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>This chapter discusses the use of data types from Java and database perspectives.
+The R2DBC SPI gives applications access to data types defined as of SQL. R2DBC is not limited to SQL types, and in fact, the SPI is type-agnostic.</p>
+</div>
+<div class="paragraph">
+<p>If a data source does not support a data type described in this chapter, a driver for that data source is not required to implement the methods and interfaces associated with that data type.</p>
+</div>
+<div class="sect2">
+<h3 id="datatypes.mapping"><a class="anchor" href="#datatypes.mapping"></a>11.1. Mapping of Data Types</h3>
+<div class="paragraph">
+<p>This section explains how SQL-specific types are mapped to Java types.
+The list is nonexhaustive and should be received as a guideline for drivers.
+R2DBC drivers should use modern types and type descriptors to exchange data for consumption by applications and consumption by the driver.
+Driver implementations should implement the following type mapping and can support additional type mappings.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#datatypes.mapping.char">Character Types</a></p>
+</li>
+<li>
+<p><a href="#datatypes.mapping.boolean">Boolean Types</a></p>
+</li>
+<li>
+<p><a href="#datatypes.mapping.binary">Binary Types</a></p>
+</li>
+<li>
+<p><a href="#datatypes.mapping.numeric">Numeric Types</a></p>
+</li>
+<li>
+<p><a href="#datatypes.mapping.datetime">Datetime Types</a></p>
+</li>
+<li>
+<p><a href="#datatypes.mapping.collection">Collection Types</a></p>
+</li>
+</ul>
+</div>
+<table id="datatypes.mapping.char" class="tableblock frame-all grid-all spread">
+<caption class="title">Table 4. SQL Type Mapping for Character Types</caption>
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">SQL Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+<th class="tableblock halign-left valign-top">Java Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>CHARACTER</code> (<code>CHAR</code>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Character string, fixed length.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>java.lang.String</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>CHARACTER VARYING</code> (<code>VARCHAR</code>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Variable-length character string, maximum length fixed.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>java.lang.String</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>NATIONAL CHARACTER</code> (<code>NCHAR</code>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>NATIONAL CHARACTER</code> type is the same as <code>CHARACTER</code> except that it holds standardized multibyte characters or Unicode characters.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>java.lang.String</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>NATIONAL CHARACTER VARYING</code> (<code>NVARCHAR</code>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>NATIONAL CHARACTER VARYING</code> type is the same as <code>CHARACTER VARYING</code> except that it holds standardized multibyte characters or Unicode characters.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>java.lang.String</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>CHARACTER LARGE OBJECT</code> (<code>CLOB</code>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A Character Large OBject (or <code>CLOB</code>) is a collection of character data in a DBMS, usually stored in a separate location that is referenced in the table itself.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>io.r2dbc.spi.Clob</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>NATIONAL CHARACTER LARGE OBJECT</code> (<code>NCLOB</code>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>NATIONAL CHARACTER LARGE OBJECT</code> type is the same as <code>CHARACTER LARGE OBJECT</code> except that it holds standardized multibyte characters or Unicode characters.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>io.r2dbc.spi.Clob</code></p></td>
+</tr>
+</tbody>
+</table>
+<table id="datatypes.mapping.boolean" class="tableblock frame-all grid-all spread">
+<caption class="title">Table 5. SQL Type Mapping for Boolean Types</caption>
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">SQL Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+<th class="tableblock halign-left valign-top">Java Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>BOOLEAN</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Single-bit representing a boolean state.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>java.lang.Boolean</code></p></td>
+</tr>
+</tbody>
+</table>
+<table id="datatypes.mapping.binary" class="tableblock frame-all grid-all spread">
+<caption class="title">Table 6. SQL Type Mapping for Binary Types</caption>
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">SQL Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+<th class="tableblock halign-left valign-top">Java Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>BINARY</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Binary data, fixed length.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>java.nio.ByteBuffer</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>BINARY VARYING</code> (<code>VARBINARY</code>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Variable-length character string, maximum length fixed.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>java.nio.ByteBuffer</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>BINARY LARGE OBJECT</code> (<code>BLOB</code>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A Binary Large OBject (or <code>BLOB</code>) is a collection of binary data in a database management system, usually stored in a separate location that is referenced in the table itself.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>io.r2dbc.spi.Blob</code></p></td>
+</tr>
+</tbody>
+</table>
+<table id="datatypes.mapping.numeric" class="tableblock frame-all grid-all spread">
+<caption class="title">Table 7. SQL Type Mapping for Numeric Types</caption>
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">SQL Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+<th class="tableblock halign-left valign-top">Java Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>INTEGER</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Represents an integer. The minimum and maximum values depend on the DBMS, typically 4-byte precision.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>java.lang.Integer</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>SMALLINT</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Same as <code>INTEGER</code> type except that it might hold a smaller range of values, depending on the DBMS, typically 1- or 2-byte precision.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>java.lang.Short</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>BIGINT</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Same as <code>INTEGER</code> type except that it might hold a larger range of values, depending on the DBMS, typically 8-byte precision.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>java.lang.Long</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>DECIMAL(p, s)</code>, <code>NUMERIC(p, s)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Fixed precision and scale numbers with precision <code>p</code>, scale <code>s</code>. A decimal number, that is a number that can have a decimal point in it. The size argument has two parts: precision and scale.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>java.math.BigDecimal</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>FLOAT(p)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Represents an approximate numerical with mantissa precision <code>p</code>.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>java.lang.Double</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>REAL</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Same as <code>FLOAT</code> type except that the DBMS defines the precision.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>java.lang.Double</code></p></td>
+</tr>
+</tbody>
+</table>
+<table id="datatypes.mapping.datetime" class="tableblock frame-all grid-all spread">
+<caption class="title">Table 8. SQL Type Mapping for Datetime Types</caption>
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">SQL Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+<th class="tableblock halign-left valign-top">Java Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>DATE</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Represents a date without specifying a time part and without timezone.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>java.time.LocalDate</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>TIME</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Represents a time without a date part and without timezone.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>java.time.LocalTime</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>TIMESTAMP</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Represents a date/time without a timezone.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>java.time.LocalDateTime</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>TIMESTAMP</code> with Timezone Offset</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Represents a date/time with a timezone offset.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>java.time.OffsetDateTime</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>TIMESTAMP</code> with Timezone</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Represents a date/time with a timezone.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>java.time.ZonedDateTime</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>INTERVAL</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Interval date types such as <code>YEAR</code>, <code>MONTH</code>, <code>DAY</code>, <code>HOUR</code> and similar representing a time quantity.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>java.time.Duration</code></p></td>
+</tr>
+</tbody>
+</table>
+<table id="datatypes.mapping.collection" class="tableblock frame-all grid-all spread">
+<caption class="title">Table 9. SQL Type Mapping for Collection Types</caption>
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">SQL Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+<th class="tableblock halign-left valign-top">Java Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>COLLECTION</code>
+( <code>ARRAY</code>, <code>MULTISET</code> )</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Represents a collection of items with a base type.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Array-Variant of the corresponding Java type (e.g. <code>Integer[]</code> for <code>INTEGER ARRAY</code>)</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>Vendor-specific types (such as spatial data types, structured JSON/XML data, user-defined types) are subject to vendor-specific mapping.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="datatypes.mapping.advanced"><a class="anchor" href="#datatypes.mapping.advanced"></a>11.2. Mapping of Advanced Data Types</h3>
+<div class="paragraph">
+<p>The R2DBC API declares default mappings for advanced data types. The following list describes data types and the interfaces to which they map:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>BLOB</code> — the <code>Blob</code> interface</p>
+</li>
+<li>
+<p><code>CLOB</code> — the <code>Clob</code> interface</p>
+</li>
+</ul>
+</div>
+<div class="sect3">
+<h4 id="datatypes.lob"><a class="anchor" href="#datatypes.lob"></a>11.2.1. <code>Blob</code> and <code>Clob</code> Objects</h4>
+<div class="paragraph">
+<p>An implementation of a <code>Blob</code> or <code>Clob</code> object may either be locator based or fully materialize the object in the driver.
+Drivers should prefer locator-based <code>Blob</code> and <code>Clob</code> interface implementations to reduce pressure on the client when materializing results.</p>
+</div>
+<div class="paragraph">
+<p>For implementations that fully materialize the Large Objects (LOB), the <code>Blob</code> and <code>Clob</code> objects remain valid until the LOB is consumed or the <code>discard()</code> method is called.</p>
+</div>
+<div class="paragraph">
+<p>Portable applications should not depend upon the LOB validity past the end of a transaction.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="datatypes.lob.create"><a class="anchor" href="#datatypes.lob.create"></a>11.2.2. Creating <code>Blob</code> and <code>Clob</code> Objects</h4>
+<div class="paragraph">
+<p>Large Objects are backed by a <code>Publisher</code> emitting the component type of the large object such as <code>ByteBuffer</code> for <code>BLOB</code> and <code>CharSequence</code> (or a subtype of it) for <code>CLOB</code>.</p>
+</div>
+<div class="paragraph">
+<p>Both interfaces provide factory methods to create implementations to be used with <code>Statement</code>. The following example explains how to create a <code>Clob</code> object:</p>
+</div>
+<div class="exampleblock">
+<div class="title">Example 26. Creating and using a <code>Clob</code> object</div>
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">// charstream is a Publisher&lt;String&gt; object
+  // statement is a Statement object
+Clob clob = Clob.from(charstream)
+statement.bind("text", clob);</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="datatypes.lob.retrieve"><a class="anchor" href="#datatypes.lob.retrieve"></a>11.2.3. Retrieving <code>Blob</code> and <code>Clob</code> Objects from a <code>Row</code></h4>
+<div class="paragraph">
+<p>The binary large object (<code>BLOB</code>) and character large object (<code>CLOB</code>) data types are treated similarly to primitive built-in types. Values of these types can be retrieved by calling the <code>get(…)</code> methods on the <code>Row</code> interface.</p>
+</div>
+<div class="exampleblock">
+<div class="title">Example 27. Retrieving a <code>Clob</code> object</div>
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">// result is a Row object
+Publisher&lt;Clob&gt; clob = result.map((row, rowMetadata) -&gt; row.get("clob", Clob.class));</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code>Clob</code> interface contains methods for returning the content and for releasing resources associated with the <code>Clob</code> object instance.
+The API documentation provides more details.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="datatypes.lob.data"><a class="anchor" href="#datatypes.lob.data"></a>11.2.4. Accessing <code>Blob</code> and <code>Clob</code> Data</h4>
+<div class="paragraph">
+<p>The <code>Blob</code> and <code>Clob</code> interfaces declare methods to consume the content of each type.
+Content streams follow Reactive Streams specifications and reflect the stream nature of large objects hence <code>Blob</code> and <code>Clob</code> objects can be consumed only once.
+Large object data consumption can be canceled by either calling the <code>discard()</code> method if the content stream was not consumed at all. Alternatively, if the content stream was consumed, a <code>Subscription</code> cancellation releases resources associated with the large object.</p>
+</div>
+<div class="paragraph">
+<p>The following example explains how to consume <code>Clob</code> contents:</p>
+</div>
+<div class="exampleblock">
+<div class="title">Example 28. Creating and using a <code>Clob</code> object</div>
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">// clob is a Clob object
+Publisher&lt;CharSequence&gt; charstream = clob.stream();</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="datatypes.lob.releasing"><a class="anchor" href="#datatypes.lob.releasing"></a>11.2.5. Releasing <code>Blob</code> and <code>Clob</code></h4>
+<div class="paragraph">
+<p><code>Blob</code> and <code>Clob</code> objects remain valid for at least the duration of the transaction in which they are created.
+This could potentially result in an application running out of resources during a long-running transaction.
+Applications may release <code>Blob</code> and <code>Clob</code> by either consuming the content stream or disposing of resources by calling the <code>discard()</code> method.</p>
+</div>
+<div class="paragraph">
+<p>The following example shows how to free <code>Clob</code> resources without consuming it:</p>
+</div>
+<div class="exampleblock">
+<div class="title">Example 29. Freeing <code>Clob</code> object resources</div>
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">// clob is a Clob object
+Publisher&lt;Void&gt; charstream = clob.discard();
+charstream.subscribe(…);</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="extensions"><a class="anchor" href="#extensions"></a>12. Extensions</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>This section covers optional extensions to <a href="#compliance.r2dbc">R2DBC Core</a>.
+Extensions provide features that are not mandatory to implement by R2DBC implementations.</p>
+</div>
+<div class="sect2">
+<h3 id="wrapped"><a class="anchor" href="#wrapped"></a>12.1. Wrapped Interface</h3>
+<div class="paragraph">
+<p>The <code>Wrapped</code> interface provides a mechanism for users to access an instance of a resource which has been wrapped and for implementors to expose wrapped resources. This mechanism helps to eliminate the need to use non-standard means to access vendor-specific resources.</p>
+</div>
+<div class="sect3">
+<h4 id="wrapped.usage"><a class="anchor" href="#wrapped.usage"></a>12.1.1. Usage</h4>
+<div class="paragraph">
+<p>A wrapper for a R2DBC SPI type is expected to implement the <code>Wrapped</code> interface so that callers can extract the original instance. Any R2DBC SPI interface type can be wrapped.</p>
+</div>
+<div class="exampleblock">
+<div class="title">Example 30. Wrapping a <code>Connection</code> and exposing the underlying resource.</div>
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">class ConnectionWrapper implements Connection, Wrapped&lt;Connection&gt; {
+
+    private final Connection wrapped;
+
+    @Override
+    public Connection unwrap() {
+        return this.wrapped;
+    }
+
+    // constructors and implementation methods omitted for brevity.
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="wrapped.methods"><a class="anchor" href="#wrapped.methods"></a>12.1.2. Interface Methods</h4>
+<div class="paragraph">
+<p>The following methods are available on the <code>Wrapped</code> interface:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>unwrap</code></p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect3">
+<h4 id="wrapped.unwrap"><a class="anchor" href="#wrapped.unwrap"></a>12.1.3. <code>unwrap</code> Method</h4>
+<div class="paragraph">
+<p>The <code>unwrap</code> method is used to return an object that implements the specified interface allowing access to vendor-specific methods.
+The returned object may either be the object found to implement the specified interface or a wrapper for that object.
+Wrappers can be unwrapped recursively.</p>
+</div>
+<div class="exampleblock">
+<div class="title">Example 31. Unwrapping a wrapped object.</div>
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">// connection is a Connection object implementing Wrapped
+
+if (connection instanceof Wrapped) {
+    connection = ((Wrapped&lt;Connection&gt;) connection).unwrap();
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div id="footer">
+<div id="footer-text">
+Version 0.8.0.M8<br>
+Last updated 2019-05-10 16:36:31 MESZ
+</div>
+</div>
+<link rel="stylesheet" href="js/highlight/styles/atom-one-dark-reasonable.min.css">
+<script src="js/highlight/highlight.min.js"></script>
+<script>hljs.initHighlighting()</script>
+</body>
+</html>
