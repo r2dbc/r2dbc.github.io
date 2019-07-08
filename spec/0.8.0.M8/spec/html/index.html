@@ -143,8 +143,8 @@
 <li><a href="#connections.factory">5.1. The <code>ConnectionFactory</code> Interface</a></li>
 <li><a href="#connections.factory.discovery">5.2. <code>ConnectionFactory</code> Discovery Mechanism</a></li>
 <li><a href="#connections.factory.options">5.3. The <code>ConnectionFactoryOptions</code> Class</a></li>
-<li><a href="#">5.4. Obtaining <code>Connection</code> Objects</a></li>
-<li><a href="#">5.5. Closing <code>Connection</code> Objects</a></li>
+<li><a href="#connections.factory.create">5.4. Obtaining <code>Connection</code> Objects</a></li>
+<li><a href="#connections.factory.close">5.5. Closing <code>Connection</code> Objects</a></li>
 </ul>
 </li>
 <li><a href="#statements">6. Statements</a>
@@ -1234,7 +1234,7 @@ Options are identified by a literal.</p>
 </div>
 </div>
 <div class="sect2">
-<h3>5.4. Obtaining <code>Connection</code> Objects</h3>
+<h3 id="connections.factory.create"><a class="anchor" href="#connections.factory.create"></a>5.4. Obtaining <code>Connection</code> Objects</h3>	
 <div class="paragraph">
 <p>Once a <code>ConnectionFactory</code> is bootstrapped, connections are obtained from the <code>create()</code> method.</p>
 </div>
@@ -1254,7 +1254,7 @@ Publisher&lt;? extends Connection&gt; publisher = factory.create();</code></pre>
 </div>
 </div>
 <div class="sect2">
-<h3>5.5. Closing <code>Connection</code> Objects</h3>
+<h3 id="connections.factory.close"><a class="anchor" href="#connections.factory.close"></a>5.5. Closing <code>Connection</code> Objects</h3>	
 <div class="paragraph">
 <p>Calling <code>Connection.close()</code> prepares a close handle to release the connection and its associated resources.
 Connections must be closed to ensure proper resource management.</p>
@@ -1265,7 +1265,7 @@ Connections must be closed to ensure proper resource management.</p>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">// connection is a ConnectionFactory object
-Publisher&lt;Void&gt; close = connection.create();</code></pre>
+Publisher&lt;Void&gt; close = connection.close();</code></pre>
 </div>
 </div>
 </div>
@@ -1407,7 +1407,7 @@ The method used to execute a parameterized <code>Statement</code> an <code>Illeg
 <div class="paragraph">
 <p>Parameterized <code>Statement</code> objects accept multiple parameter binding sets submit a batch of commands to the database for execution.
 Batch execution is initiated by invoking the <code>add()</code> method on the <code>Statement</code> object after providing all parameters.
-After calling <code>add()</code>, the next set of parameter bindings is provided by calling bing methods accordingly.</p>
+After calling <code>add()</code>, the next set of parameter bindings is provided by calling bind methods accordingly.</p>
 </div>
 <div class="exampleblock">
 <div class="title">Example 13. Executing a <code>Statement</code> batch</div>
