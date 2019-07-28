@@ -20,7 +20,7 @@ R2DBC (Reactive Relational Database Connectivity) is an endeavor to bring a reac
 | Transactions                  | X              |     X      |      X        |     X              |
 | Save points                   | X              |     X      |      X        |     X              |
 | Batching                      | X              |     X      |      X        |                    |
-| BLOB/CLOB                     | X              |     X      |      X        |                    |
+| BLOB/CLOB                     | X              |     X      |      X        |     X              |
 | Multiplexed connections       |                |            |               |                    |
 | URI-based implement selection | X              |     X      |      X        |     X              |
 | Observability                 | Through R2DBC Proxy|Through R2DBC Proxy|Through R2DBC Proxy|Through R2DBC Proxy      |
