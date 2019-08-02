@@ -23,9 +23,10 @@ And to ease implementation, a test interface, a veritable TCK, is provided to en
 
 R2DBC drivers implements the SPI listed above. The ones currently supported include:
 
-* [r2dbc-postgres](https://github.com/r2dbc/r2dbc-postgresql) - driver implemented for PostgreSQL.
-* [r2dbc-h2](https://github.com/r2dbc/r2dbc-h2) - driver implemented for H2 as a test database.
-* [r2dbc-mssql](https://github.com/r2dbc/r2dbc-mssql) - driver implemented for Microsoft SQL Server.
+* [r2dbc-h2](https://github.com/r2dbc/r2dbc-h2) - native driver implemented for H2 as a test database.
+* [r2dbc-postgres](https://github.com/r2dbc/r2dbc-postgresql) - native driver implemented for PostgreSQL.
+* [r2dbc-mssql](https://github.com/r2dbc/r2dbc-mssql) - native driver implemented for Microsoft SQL Server.
+* [r2dbc-mysql](https://github.com/mirromutth/r2dbc-mysql) - native driver implemented for MySQL.
 * [cloud-spanner-r2dbc](https://github.com/GoogleCloudPlatform/cloud-spanner-r2dbc) - experimental driver for Google Cloud Spanner
 * [jasync-sql](https://github.com/jasync-sql/jasync-sql) - Java & Kotlin Async DataBase Driver for MySQL and PostgreSQL written in Kotlin that has initial R2DBC support
 
