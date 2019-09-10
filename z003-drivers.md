@@ -30,7 +30,6 @@ R2DBC drivers implements the SPI listed above. The ones currently supported incl
 * [cloud-spanner-r2dbc](https://github.com/GoogleCloudPlatform/cloud-spanner-r2dbc) - experimental driver for Google Cloud Spanner
 * [jasync-sql](https://github.com/jasync-sql/jasync-sql) - Java & Kotlin Async DataBase Driver for MySQL and PostgreSQL written in Kotlin that has initial R2DBC support
 
-
 # Coding your own driver
 
 R2DBC has a clearly defined **SPI** you must implement to host a solution for your data store. To build an implementation, add the following artifact to your build:
@@ -38,21 +37,7 @@ R2DBC has a clearly defined **SPI** you must implement to host a solution for yo
 * Group: **io.r2dbc**
 * Artifact: **r2dbc-spi**
 
-The key interface all driver providers must implements is the [`Connection`](https://github.com/r2dbc/r2dbc-spi/blob/master/r2dbc-spi/src/main/java/io/r2dbc/spi/Connection.java) as shown below:
-
-```
-Publisher<Void> beginTransaction();
-Publisher<Void> close();
-Publisher<Void> commitTransaction();
-Batch createBatch();
-Publisher<Void> createSavepoint(String name);
-Statement createStatement(String sql);
-Publisher<Void> releaseSavepoint(String name);
-Publisher<Void> rollbackTransaction();
-Publisher<Void> rollbackTransactionToSavepoint(String name);
-Publisher<Void> setTransactionIsolationLevel(IsolationLevel level);
-```
-
+The key interface all driver providers must implement is the [`Connection`](https://github.com/r2dbc/r2dbc-spi/blob/master/r2dbc-spi/src/main/java/io/r2dbc/spi/Connection.java) and a set of other interfaces.
 Check out the specification for details on [R2DBC Driver Compliance](/spec/1.0.0.M7/spec/html/#compliance).
 
 There are other parts to implement, but this is the core.
@@ -64,6 +49,6 @@ R2DBC also has a suite of test cases to verify your support. Your data store imp
 * Group: **io.r2dbc**
 * Artifact: **r2dbc-spi-test**
 
-To run all the tests that are expected, write an implementation of the TCK's `Example<T>` test.
+To run all the tests that are expected, write an implementation of the TCK's `TestKit<T>` test.
 
-See [r2dbc-postgresql's Example](https://github.com/r2dbc/r2dbc-postgresql/blob/master/src/test/java/io/r2dbc/postgresql/PostgresqlExample.java) to read the full source.
+See [r2dbc-postgresql's Example](https://github.com/r2dbc/r2dbc-postgresql/blob/master/src/test/java/io/r2dbc/postgresql/PostgresqlTestKit.java) to read the full source.
