@@ -4,11 +4,9 @@ title: Drivers
 permalink: /drivers/
 ---
 
-This section is dedicated toward writing an R2DBC driver for database.
-
 # Service Provider Interface (SPI)
 
-R2DBC defines an SPI all data store drivers must implement.
+R2DBC defines an SPI all data store drivers must implement:
 
 * [r2dbc-spi](https://github.com/r2dbc/r2dbc-spi) - set of interfaces defining the SPI for R2DBC.
 * [r2dbc-spi-test](https://github.com/r2dbc/r2dbc-spi/tree/master/r2dbc-spi-test) - a **Technology Compatibility Kit (TCK)** contained within the SPI repository for verifying your driver's implementation.
@@ -23,22 +21,28 @@ And to ease implementation, a test interface, a veritable TCK, is provided to en
 
 R2DBC drivers implements the SPI listed above. The ones currently supported include:
 
-* [r2dbc-h2](https://github.com/r2dbc/r2dbc-h2) - native driver implemented for H2 as a test database.
-* [r2dbc-postgres](https://github.com/r2dbc/r2dbc-postgresql) - native driver implemented for PostgreSQL.
-* [r2dbc-mssql](https://github.com/r2dbc/r2dbc-mssql) - native driver implemented for Microsoft SQL Server.
-* [r2dbc-mysql](https://github.com/mirromutth/r2dbc-mysql) - native driver implemented for MySQL.
-* [cloud-spanner-r2dbc](https://github.com/GoogleCloudPlatform/cloud-spanner-r2dbc) - experimental driver for Google Cloud Spanner
-* [jasync-sql](https://github.com/jasync-sql/jasync-sql) - Java & Kotlin Async DataBase Driver for MySQL and PostgreSQL written in Kotlin that has initial R2DBC support
+* [cloud-spanner-r2dbc](https://github.com/GoogleCloudPlatform/cloud-spanner-r2dbc) - Driver for Google Cloud Spanner.
+* [jasync-sql](https://github.com/jasync-sql/jasync-sql) - R2DBC wrapper for Java & Kotlin Async Database Driver for MySQL and PostgreSQL written in Kotlin.
+* [r2dbc-h2](https://github.com/r2dbc/r2dbc-h2) - Native driver implemented for H2 as a test database.
+* [r2dbc-postgres](https://github.com/r2dbc/r2dbc-postgresql) - Native driver implemented for PostgreSQL.
+* [r2dbc-mssql](https://github.com/r2dbc/r2dbc-mssql) - Native driver implemented for Microsoft SQL Server.
+* [r2dbc-mysql](https://github.com/mirromutth/r2dbc-mysql) - Native driver implemented for MySQL.
 
-# Coding your own driver
+# Connection Pooling
+
+The following connection pool implementations are available for R2DBC:
+
+* [r2dbc-pool](https://github.com/r2dbc/r2dbc-pool) - Reactive connection pooling using Reactor Pool.
+
+# Implementing a driver
 
 R2DBC has a clearly defined **SPI** you must implement to host a solution for your data store. To build an implementation, add the following artifact to your build:
 
 * Group: **io.r2dbc**
 * Artifact: **r2dbc-spi**
 
-The key interface all driver providers must implement is the [`Connection`](https://github.com/r2dbc/r2dbc-spi/blob/master/r2dbc-spi/src/main/java/io/r2dbc/spi/Connection.java) and a set of other interfaces.
-Check out the specification for details on [R2DBC Driver Compliance](/spec/1.0.0.M7/spec/html/#compliance).
+The key interface all driver providers must implement is the [`Connection`](https://r2dbc.io/spec/0.8.0.RC1/api/io/r2dbc/spi/Connection.html) and a set of other interfaces.
+Check out the specification for details on [R2DBC Driver Compliance](/spec/0.8.0.RC1/spec/html/#compliance).
 
 There are other parts to implement, but this is the core.
 
