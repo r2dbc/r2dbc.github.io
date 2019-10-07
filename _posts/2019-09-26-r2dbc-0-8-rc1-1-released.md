@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "R2DBC 0.8 Release Candidate 1 released"
-date:   2019-10-26 18:00:00 +0100
+date:   2019-09-26 18:00:00 +0100
 tags: [milestone, release]
 author: Mark Paluch
 ---
