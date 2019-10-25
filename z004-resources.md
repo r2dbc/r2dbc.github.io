@@ -47,7 +47,7 @@ Here is a series of videos related to R2DBC.
 
 <iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/sUXKDGt3QRk" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
 
-# Weekly Call
+# Monthly Call
 
 The R2DBC working group meets every 1st Friday of a Month at 6:30AM PT (USA Pacific)/9:30AM ET (USA Eastern)/3:30PM CET (Central European) time. 
 Join the call if you want to participate. 
