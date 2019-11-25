@@ -22,7 +22,7 @@ R2DBC (Reactive Relational Database Connectivity) is an endeavor to bring a reac
 * Observability
 
 ## Latest Release
-The latest release of R2DBC is 0.8.0.RC2. You can [download the spec](/spec/0.8.0.RC2/spec/html/) or [browse the javadoc](/spec/0.8.0.RC2/api/).
+The latest release of R2DBC is 0.8.0.RELEASE. You can [download the spec](/spec/0.8.0.RELEASE/spec/html/) or [browse the javadoc](/spec/0.8.0.RELEASE/api/).
 
 ## [Driver Implementations](/drivers/)
 

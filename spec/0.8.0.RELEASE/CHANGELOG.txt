@@ -1,0 +1,92 @@
+R2DBC SPI Changelog
+=============================
+
+0.8.0.RELEASE
+------------------
+* Update changelog for 0.8.0.RELEASE #140
+* Extend Javadoc and refine specification #139
+* Document backpressure behavior related to fetching results #137
+* Fix typo #135
+* Remove Statement.bind(index, <primitive>) methods #134
+* Change default mapping of BLOB and CLOB column types to ByteBuffer respective String #133
+* Malformed header in spec #131
+* Change default mapping of BLOB and CLOB column types to ByteBuffer and String #130
+* Release 0.8.0.RC1 #129
+* Inconsistent Statement.bind(int, …) vs bind(String, Object) #124
+
+0.8.0.RC1
+------------------
+* Add automatic module name #128
+* Upgrade to Reactor Dysprosium GA #127
+* Documentation edits #126
+* Prevent Result leaking in batch test #125
+* Replace spring-boot-starter-jdbc with spring-jdbc #123
+* Remove repositories declaration from published pom #121
+* Editing #120
+* Use int and String identifier for RowMetadata #119
+* Expose Connection metadata #118
+* Refine parameter binding requirements #117
+* Clean up Statement.bind*(Object) and Result.get(Object) methods #116
+* Use int and String identifier in bind(Object, …) and get(Object, …) methods  #115
+* Correct binding in TestKit #114
+* Upgrade maven-compiler-plugin to 3.8.1 #110
+* Upgrade Spring Boot to 2.1.7.RELEASE #109
+* Upgrade to Dysprosium-M3 #108
+* Auto-generated key test improvements #106
+* Make "INSERT INTO" overridable for `returnGeneratedValues` in TCK #105
+* Expose Connection metadata #104
+* Updated documentation #102
+* Feedback on R2DBC Type Mapping #97
+* Spec contains incomplete wording #96
+* Rename Example to TestKit #93
+* Add specification for Statement.fetchSize #92
+* Add specification for Closeable #91
+* Allow url parser to have empty password #89
+* ArrayIndexOutOfBoundsException when connection URL contains an user without a password #88
+* Specify transaction/auto-commit behavior #78
+* Spec documentation: Add overview for Statement #77
+* Object vs. int and String identifier in bind(Object, …) and get(Object) methods #76
+* Introduce Connection.isValid() method #54
+* Positional Argument Binding Index #33
+
+0.8.0.M8
+------------------
+* Migrate IsolationLevel to interface #82
+* Spec documentation: Add detailed specification for Result and Row #81
+* Spec documentation: Add detailed specification for Wrapped #80
+* Spec documentation: Add detailed specification for Statement #79
+* R2dbcBadGrammarException should expose getter for offendingSql #74
+* Improve RowMetadata for presence/absence check of columns #56
+* Add R2DBC Exception Hierarchy #53
+* Add diagnostic information to ConnectionFactories #52
+* Add contribution guidelines #50
+* Add diagnostic information to ConnectionFactoryProvider and ConnectionFactories #49
+* Add R2DBC Connection URL support #48
+* Introduce R2DBC Exception Hierarchy #47
+* BLOB/CLOB API #41
+* Switch to 0.8.0 versioning scheme
+
+1.0.0.M7
+------------------
+* Update changelog for M7 #45
+* Improved documentation (spec, license, guide) #32, #36
+* Nullability enforcement returns accurate exception #31
+* Reinstated generated value retrieval #25
+* Removed recursive generics in Statement and Batch #24
+* Improved support for column metadata #22
+* Add support for ConnectionFactory discovery #10
+* Add support for observability/tracing with the r2dbc-proxy project #9, #29
+
+1.0.0.M6
+------------------
+* executeReturningGeneratedKeys() should allow keys to be specified #17
+* Publish a code formatting guideline #15
+* Drop Support for Transaction Mutability #14
+* R2DBC API: Statement.bind(Integer, Object) should be Statement.bind(int, Object) #6
+* R2DBC API: Provide Statement.bindNull(…) accepting integer index #5
+* Identifier Ambiguity #3
+
+1.0.0.M4
+------------------
+* R2DBC API: Provide Row.get(Object identifier) #4
+* Upgrade to Reactor Californium #1
