@@ -2,9 +2,7 @@
 layout: default
 ---
 
-R2DBC (Reactive Relational Database Connectivity) is an endeavor to bring a reactive programming API to SQL databases. It was first announced at SpringOne Platform 2018, as shown in the keynote below:
-
-<iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/E3s5f-JF8z4?start=520" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+R2DBC (Reactive Relational Database Connectivity) is an endeavor to bring a reactive programming API to SQL databases.
 
 # In a Nutshell
 
@@ -22,6 +20,9 @@ R2DBC (Reactive Relational Database Connectivity) is an endeavor to bring a reac
 * Connection URLs
 * Java ServiceLoader-based `ConnectionFactory` discover and configuration
 * Observability
+
+## Latest Release
+The latest release of R2DBC is 0.8.0.RC2. You can [download the spec](/spec/0.8.0.RC2/spec/html/) or [browse the javadoc](/spec/0.8.0.RC2/api/).
 
 ## [Driver Implementations](/drivers/)
 
