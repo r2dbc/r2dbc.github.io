@@ -84,9 +84,9 @@
 <div class="details">
 <span id="author" class="author">Ben Hale&lt;bhale@pivotal.io&gt;, Mark Paluch &lt;mpaluch@pivotal.io&gt;, Greg Turnquist &lt;gturnquist@pivotal.io&gt;, Jay Bryant &lt;jbryant@pivotal.io&gt;</span><br>
 <span id="email" class="email"><a href="mailto:r2dbc@googlegroups.com">r2dbc@googlegroups.com</a></span><br>
-<span id="revnumber">version 0.8.0.RC1,</span>
-<span id="revdate">2019-09-26</span>
-<br><span id="revremark">Draft</span>
+<span id="revnumber">version 0.8.1.RELEASE,</span>
+<span id="revdate">2020-02-04</span>
+<br><span id="revremark">Final</span>
 </div>
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
@@ -101,10 +101,11 @@
 <li><a href="#introduction">1. Introduction</a>
 <ul class="sectlevel2">
 <li><a href="#introduction.r2dbc-spi">1.1. The R2DBC SPI</a></li>
-<li><a href="#introduction.target-audience">1.2. Target Audience</a></li>
-<li><a href="#introduction.acknowledgements">1.3. Acknowledgements</a></li>
-<li><a href="#introduction.following">1.4. Following Development</a></li>
-<li><a href="#introduction.project-metadata">1.5. Project Metadata</a></li>
+<li><a href="#introduction.requirements-conventions">1.2. Requirements and Conventions</a></li>
+<li><a href="#introduction.target-audience">1.3. Target Audience</a></li>
+<li><a href="#introduction.acknowledgements">1.4. Acknowledgements</a></li>
+<li><a href="#introduction.following">1.5. Following Development</a></li>
+<li><a href="#introduction.project-metadata">1.6. Project Metadata</a></li>
 </ul>
 </li>
 <li><a href="#goals">2. Goals</a>
@@ -154,15 +155,17 @@
 </li>
 <li><a href="#transactions">6. Transactions</a>
 <ul class="sectlevel2">
-<li><a href="#transactions.boundaries">6.1. Transaction Boundaries</a>
+<li><a href="#transactions.boundaries">6.1. Transaction Boundaries</a></li>
+<li><a href="#transactions.auto-commit">6.2. Auto-commit Mode</a></li>
+<li><a href="#transactions.isolation">6.3. Transaction Isolation</a>
 <ul class="sectlevel3">
-<li><a href="#">6.1.1. Performance Considerations</a></li>
+<li><a href="#">6.3.1. Performance Considerations</a></li>
 </ul>
 </li>
-<li><a href="#transactions.savepoints">6.2. Savepoints</a>
+<li><a href="#transactions.savepoints">6.4. Savepoints</a>
 <ul class="sectlevel3">
-<li><a href="#">6.2.1. Working with Savepoints</a></li>
-<li><a href="#">6.2.2. Releasing a Savepoint</a></li>
+<li><a href="#">6.4.1. Working with Savepoints</a></li>
+<li><a href="#">6.4.2. Releasing a Savepoint</a></li>
 </ul>
 </li>
 </ul>
@@ -302,13 +305,13 @@ Copies of this document may be made for your own use and for distribution to oth
 <div class="content">
 <pre>Specification: R2DBC - Reactive Relational Database Connectivity
 
-Version: 0.8.0.RC1
+Version: 0.8.1.RELEASE
 
-Status: Draft
+Status: Final
 
 Specification Lead: Pivotal Software, Inc.
 
-Release: 2019-09-26
+Release: 2020-02-04
 
 Copyright 2017-2019 the original author or authors.
 
@@ -335,6 +338,7 @@ The <a href="#introduction">Introduction</a> contains more details about its ori
 <div class="paragraph">
 <p>This document describes the first and initial generation of R2DBC.</p>
 </div>
+<div style="page-break-after: always;"></div>
 </div>
 <div class="sect2">
 <h3 id="doc.organisation"><a class="anchor" href="#doc.organisation"></a>Organization of this document</h3>
@@ -392,7 +396,7 @@ The <a href="#introduction">Introduction</a> contains more details about its ori
 <div class="sectionbody">
 <div id="introduction.what-is-r2dbc" class="paragraph">
 <p>R2DBC stands for Reactive Relational Database Connectivity.
-R2DBC started as an experiment and proof of concept to enable integration of relational databases into systems that use reactive programming models –- Reactive in the sense of an event-driven, non-blocking, and functional programming model that does not make assumptions over concurrency or asynchronicity.
+R2DBC started as an experiment and proof of concept to enable integration of SQL databases into systems that use reactive programming models –- Reactive in the sense of an event-driven, non-blocking, and functional programming model that does not make assumptions over concurrency or asynchronicity.
 Instead, it assumes that scheduling and parallelization happen as part of runtime scheduling.</p>
 </div>
 <div class="sect2">
@@ -408,11 +412,33 @@ R2DBC targets primarily, but is not limited to, relational databases.
 It aims for a range of data sources whose query and statement interface is based on SQL (or an SQL-like dialect) and that represent their data in a tabular form.</p>
 </div>
 <div class="paragraph">
-<p>A key difference between R2DBC and imperative data access SPIs is the deferred nature of execution. R2DBC is, therefore, based on <a href="https://www.reactive-streams.org/">Reactive Streams</a> and uses the concepts of <code>Publisher</code> and <code>Subscriber</code> to allow non-blocking backpressure-aware data access.</p>
+<p>A key difference between R2DBC and imperative data access SPIs is the deferred nature of execution.
+R2DBC is, therefore, based on <a href="https://www.reactive-streams.org/">Reactive Streams</a> and uses the concepts of <code>Publisher</code> and <code>Subscriber</code> to allow non-blocking back-pressure-aware data access.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="introduction.target-audience"><a class="anchor" href="#introduction.target-audience"></a>1.2. Target Audience</h3>
+<h3 id="introduction.requirements-conventions"><a class="anchor" href="#introduction.requirements-conventions"></a>1.2. Requirements and Conventions</h3>
+<div class="paragraph">
+<p>R2DBC requires Java 8 as baseline and <a href="https://www.reactive-streams.org/">Reactive Streams</a> in terms of a reactive inter-op API.</p>
+</div>
+<div class="paragraph">
+<p>A note about modules: R2DBC allow for deployment to JDK 9&#8217;s module path ("Jigsaw").
+For use in Jigsaw-enabled applications, the R2DBC SPI comes with "Automatic-Module-Name" manifest entries which define stable language-level module names ("r2dbc.spi") instead using the artifact name.
+Of course, R2DBC jars keep working fine on the classpath on both JDK 8 and 9+.</p>
+</div>
+<div class="paragraph">
+<p>R2DBC&#8217;s SPI uses non-null semantics by default.
+Nullable API members are annotated with <code>@io.r2dbc.spi.Nullable</code>.
+This annotation and <code>@NonNullApi</code> are meta-annotated with <a href="https://jcp.org/en/jsr/detail?id=305">JSR 305</a> annotations (a dormant but wide-spread JSR).
+JSR-305 meta-annotations let tooling vendors like IDEA or Kotlin provide null-safety support in a generic way, without having to hard-code support for R2DBC annotations.
+It is not necessary nor recommended to add a JSR-305 dependency to the project classpath to take advantage of a null-safe API.</p>
+</div>
+<div class="paragraph">
+<p>R2DBC generally uses zero-based indexes for parameter binding and columns.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="introduction.target-audience"><a class="anchor" href="#introduction.target-audience"></a>1.3. Target Audience</h3>
 <div class="paragraph">
 <p>This specification is targeted primarily towards:</p>
 </div>
@@ -442,9 +468,12 @@ It aims for a range of data sources whose query and statement interface is based
 </li>
 </ul>
 </div>
+<div class="paragraph">
+<p>Code examples in this specification assume external subscription to <code>Publisher</code> objects for brevity.</p>
+</div>
 </div>
 <div class="sect2">
-<h3 id="introduction.acknowledgements"><a class="anchor" href="#introduction.acknowledgements"></a>1.3. Acknowledgements</h3>
+<h3 id="introduction.acknowledgements"><a class="anchor" href="#introduction.acknowledgements"></a>1.4. Acknowledgements</h3>
 <div class="paragraph">
 <p>The R2DBC specification work is being conducted as an effort of individuals that recognized the demand for a reactive, standardized API for relational database access.
 We want to thank all <a href="https://github.com/r2dbc/r2dbc-spi/graphs/contributors">contributing members</a> for their countless hours of work and discussion.</p>
@@ -454,7 +483,7 @@ We want to thank all <a href="https://github.com/r2dbc/r2dbc-spi/graphs/contribu
 </div>
 </div>
 <div class="sect2">
-<h3 id="introduction.following"><a class="anchor" href="#introduction.following"></a>1.4. Following Development</h3>
+<h3 id="introduction.following"><a class="anchor" href="#introduction.following"></a>1.5. Following Development</h3>
 <div class="paragraph">
 <p>For information on R2DBC source code repositories, nightly builds, and snapshot artifacts, see the <a href="https://r2dbc.io/resources/">R2DBC</a> homepage.
 You can help make R2DBC best serve the needs of the community by interacting with developers through the community.
@@ -467,7 +496,7 @@ R2DBC has an open-source organization on GitHub that bundles the various project
 </div>
 </div>
 <div class="sect2">
-<h3 id="introduction.project-metadata"><a class="anchor" href="#introduction.project-metadata"></a>1.5. Project Metadata</h3>
+<h3 id="introduction.project-metadata"><a class="anchor" href="#introduction.project-metadata"></a>1.6. Project Metadata</h3>
 <div class="ulist">
 <ul>
 <li>
@@ -480,7 +509,7 @@ R2DBC has an open-source organization on GitHub that bundles the various project
 <p>Issue tracker: <a href="https://github.com/r2dbc/r2dbc-spi/issues" class="bare">https://github.com/r2dbc/r2dbc-spi/issues</a></p>
 </li>
 <li>
-<p>Release repository: <a href="https://repo.spring.io/libs-release" class="bare">https://repo.spring.io/libs-release</a></p>
+<p>Release repository: <a href="https://repo1.maven.org/maven2" class="bare">https://repo1.maven.org/maven2</a></p>
 </li>
 <li>
 <p>Milestone repository: <a href="https://repo.spring.io/libs-milestone" class="bare">https://repo.spring.io/libs-milestone</a></p>
@@ -674,6 +703,7 @@ A driver may provide support for features that are not implemented by the underl
 </dd>
 </dl>
 </div>
+<div style="page-break-after: always;"></div>
 </div>
 <div class="sect2">
 <h3 id="compliance.guidelines"><a class="anchor" href="#compliance.guidelines"></a>3.2. Guidelines and Requirements</h3>
@@ -704,6 +734,7 @@ That is, the first index begins with <code>0</code>.</p>
 </li>
 </ul>
 </div>
+<div style="page-break-after: always;"></div>
 </div>
 <div class="sect2">
 <h3 id="compliance.r2dbc"><a class="anchor" href="#compliance.r2dbc"></a>3.3. R2DBC SPI Compliance</h3>
@@ -893,8 +924,7 @@ A typical use case is the separation of concerns in which data-source coordinate
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code>&nbsp;
-      URI         = scheme ":" driver [ ":" protocol ] ":" hier-part [ "?" query ] [ "#" fragment ]
+<pre class="highlightjs highlight"><code>      URI         = scheme ":" driver [ ":" protocol ] ":" hier-part [ "?" query ] [ "#" fragment ]
 
       scheme      = "r2dbc" / "r2dbcs"
 
@@ -914,6 +944,16 @@ A typical use case is the separation of concerns in which data-source coordinate
       host        = IP-literal / IPv4address / reg-name
 
       port        = *DIGIT
+
+      path-abempty  = *( "/" segment )
+      path-absolute = "/" [ segment-nz *( "/" segment ) ]
+      path-rootless = segment-nz *( "/" segment )
+      path-empty    = 0<pchar>
+
+      segment       = *pchar
+      segment-nz    = 1*pchar
+      segment-nz-nc = 1*( unreserved / pct-encoded / sub-delims / "@" )
+                 ; non-zero-length segment without any colon ":"
 
       query       = *( pchar / "/" / "?" )
 
@@ -949,13 +989,16 @@ scheme  driver  protocol  authority    path        query</code></pre>
 <p><code>scheme</code>: Identify that the URL is a valid R2DBC URL. Valid schemes are <code>r2dbc</code> and <code>r2dbcs</code> (configure SSL usage).</p>
 </li>
 <li>
-<p><code>driver</code>: Identifier for a driver. R2DBC has no authority over driver identifiers.</p>
+<p><code>driver</code>: Identifier for a driver.
+The specification has no authority over driver identifiers.</p>
 </li>
 <li>
-<p><code>protocol</code>: Used as optional protocol information to configure a driver-specific protocol. Protocols can be organized hierarchically and are separated by a colon (<code>:</code>).</p>
+<p><code>protocol</code>: Used as optional protocol information to configure a driver-specific protocol.
+Protocols can be organized hierarchically and are separated by a colon (<code>:</code>).</p>
 </li>
 <li>
-<p><code>authority</code>: Contains an endpoint and authorization. The authority may contain a single host or a collection of hostnames and port tuples by separating these with a comma (<code>,</code>).</p>
+<p><code>authority</code>: Contains an endpoint and authorization.
+The authority may contain a single host or a collection of hostnames and port tuples by separating these with a comma (<code>,</code>).</p>
 </li>
 <li>
 <p><code>path</code>: (optional) Used as an initial schema or database name.</p>
@@ -1083,6 +1126,19 @@ Additional options identifiers are created through <code>Option.valueOf(…)</co
 </tr>
 </table>
 </div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+Note that Connection URL Parsing cannot access <code>Option</code> type information <code>T</code> due to Java&#8217;s type erasure.
+Options configured by URL parsing are represented as <code>String</code> values.
+</td>
+</tr>
+</table>
+</div>
 <div class="exampleblock">
 <div class="title">Example 3. Obtaining a <code>ConnectionFactory</code> using R2DBC URL</div>
 <div class="content">
@@ -1142,7 +1198,7 @@ The structure of a connection depends on the actual requirements of the data sou
 A single application that uses R2DBC SPI can maintain multiple connections to either a single data source or across multiple data sources.
 From a R2DBC driver perspective, a <code>Connection</code> object represents a single client session.
 It has associated state information, such as user ID and what transaction semantics are in effect.
-A <code>Connection</code> object is not thread-safe (it cannot be shared across multiple threads that concurrently execute statements or change its state).
+A <code>Connection</code> object is not safe for concurrent state-changing by multiple subscribers.
 A connection object can be shared across multiple threads that serially run operations by using appropriate synchronization mechanisms.</p>
 </div>
 <div class="paragraph">
@@ -1327,7 +1383,7 @@ Options are identified by a literal.</p>
 <thead>
 <tr>
 <th class="tableblock halign-left valign-top">Constant</th>
-<th class="tableblock halign-left valign-top">Literal</th>
+<th class="tableblock halign-left valign-top">URL Literal</th>
 <th class="tableblock halign-left valign-top">Type</th>
 <th class="tableblock halign-left valign-top">Description</th>
 </tr>
@@ -1405,6 +1461,10 @@ Options are identified by a literal.</p>
 </li>
 <li>
 <p>Drivers should not fail in creating a connection if more options are declared than the driver consumes, as a <code>ConnectionFactory</code> should expect to be wrapped.</p>
+</li>
+<li>
+<p>Connection URL Parsing cannot access <code>Option</code> type information <code>T</code> due to Java&#8217;s type erasure.
+Options obtained by URL parsing beyond well-known keys are represented as <code>String</code> values.</p>
 </li>
 </ul>
 </div>
@@ -1495,14 +1555,14 @@ The <code>ValidationDepth</code> argument passed to this method indicates the de
 <div class="paragraph">
 <p>If <code>Connection.validate(…)</code> emits <code>true</code>, the <code>Connection</code> is still valid.
 If <code>Connection.validate(…)</code> emits <code>false</code>, the <code>Connection</code> is not valid, and any attempt to perform database interaction fails.
-Callers of this method do not expect error signals.</p>
+Callers of this method do not expect error signals or empty completion.</p>
 </div>
 </div>
 <div class="sect2">
 <h3 id="connections.close"><a class="anchor" href="#connections.close"></a>5.7. Closing <code>Connection</code> Objects</h3>
 <div class="paragraph">
 <p>Calling <code>Connection.close()</code> prepares a close handle to release the connection and its associated resources.
-Connections must be closed to ensure proper resource management.
+Connections must be closed to ensure proper resource disposal.
 You can use <code>Connection.validate(…)</code> to determine whether a <code>Connection</code> has been closed or is still valid.
 The following example shows how to close a connection:</p>
 </div>
@@ -1559,10 +1619,9 @@ Transactions are started by either an R2DBC driver or by the underlying database
 <p>The <code>Connection</code> attribute auto-commit mode specifies when to end transactions.
 Enabling auto-commit mode causes a transaction commit after each SQL statement as soon as that statement is completely executed.</p>
 </div>
-<div class="paragraph">
-<p>[[transactions.auto-commit]
-== Auto-commit Mode</p>
 </div>
+<div class="sect2">
+<h3 id="transactions.auto-commit"><a class="anchor" href="#transactions.auto-commit"></a>6.2. Auto-commit Mode</h3>
 <div class="paragraph">
 <p>A <code>ConnectionFactory</code> creates new <code>Connection</code> objects with auto-commit mode enabled.
 The <code>Connection</code> interface provides two methods to interact with auto-commit mode:</p>
@@ -1603,10 +1662,9 @@ Querying auto-commit mode is typically a local operation that involves driver st
 </li>
 </ul>
 </div>
-<div class="paragraph">
-<p>[[transactions.isolation]
-== Transaction Isolation</p>
 </div>
+<div class="sect2">
+<h3 id="transactions.isolation"><a class="anchor" href="#transactions.isolation"></a>6.3. Transaction Isolation</h3>
 <div class="paragraph">
 <p>Transaction isolation levels define the level of visibility (&#8220;isolation&#8221;) for statements that are run within a transaction.
 They impact concurrent access while multiple transactions are active.</p>
@@ -1641,7 +1699,7 @@ The return value of the <code>getTransactionIsolationLevel</code> method should 
 A driver may not support transaction levels. Calling <code>getTransactionIsolationLevel</code> results in returning the vendor-specific <code>IsolationLevel</code> object.</p>
 </div>
 <div class="sect3">
-<h4>6.1.1. Performance Considerations</h4>
+<h4>6.3.1. Performance Considerations</h4>
 <div class="paragraph">
 <p>When you increase the transaction isolation level, databases typically require more locking and resource overhead to ensure isolation level semantics.
 This, in turn, lowers the degree of concurrent access that can be supported.
@@ -1651,13 +1709,13 @@ For this reason, a transaction manager, whether it is the application itself or 
 </div>
 </div>
 <div class="sect2">
-<h3 id="transactions.savepoints"><a class="anchor" href="#transactions.savepoints"></a>6.2. Savepoints</h3>
+<h3 id="transactions.savepoints"><a class="anchor" href="#transactions.savepoints"></a>6.4. Savepoints</h3>
 <div class="paragraph">
 <p>Savepoints provide a fine-grained control mechanism by marking intermediate points within a transaction.
 Once a savepoint has been created, a transaction can be rolled back to that savepoint without affecting preceding work.</p>
 </div>
 <div class="sect3">
-<h4>6.2.1. Working with Savepoints</h4>
+<h4>6.4.1. Working with Savepoints</h4>
 <div class="paragraph">
 <p>The <code>Connection</code> interface defines methods to interact with savepoints:</p>
 </div>
@@ -1676,7 +1734,7 @@ Once a savepoint has been created, a transaction can be rolled back to that save
 </div>
 <div class="paragraph">
 <p>Savepoints are created during an active transaction and are valid only as long as the transaction is active.
-You can sue the <code>createSavepoint</code> method to set a savepoint within the current transaction.
+You can use the <code>createSavepoint</code> method to set a savepoint within the current transaction.
 A transaction is started if <code>createSavepoint</code> is invoked and there is no active transaction (switching the connection to disabled auto-commit mode).
 The <code>rollbackTransactionToSavepoint</code> method is used to roll back work to a previous savepoint without rolling back the entire transaction.
 the following example shows how to roll back a transaction to a savepoint:</p>
@@ -1711,9 +1769,10 @@ Publisher&lt;Void&gt; commit = connection.commit();
 <div class="paragraph">
 <p>Drivers that do not support savepoint creation and rolling back to a savepoint should throw an <code>UnsupportedOperationException</code> to indicate these features are not supported.</p>
 </div>
+<div style="page-break-after: always;"></div>
 </div>
 <div class="sect3">
-<h4>6.2.2. Releasing a Savepoint</h4>
+<h4>6.4.2. Releasing a Savepoint</h4>
 <div class="paragraph">
 <p>Savepoints allocate resources on the databases, and some vendors may require releasing a savepoint to dispose resources.
 The <code>Connection</code> interface  defines the <code>releaseSavepoint</code> method to release savepoints that are no longer needed.</p>
@@ -1954,9 +2013,15 @@ result.map((row, metadata) -&gt; row.get("id"));</code></pre>
 <div class="paragraph">
 <p>The <code>Statement</code> interface provides a method that you can use to provide hints to a R2DBC driver.
 Calling <code>fetchSize</code> applies a fetch-size hint to each query produced by the statement.
-Hints provided to the driver through this interface may be ignored by the driver if they are not appropriate or supported.
-Typically, fetch size can be derived from back-pressure hints.
-To optimize for performance, it can be useful to provide hints to the driver on a per-statement basis.</p>
+Hints provided to the driver through this interface may be ignored by the driver if they are not appropriate or supported.</p>
+</div>
+<div class="paragraph">
+<p>Back-pressure hints can be used by drivers to derive an appropriate fetch size.
+To optimize for performance, it can be useful to provide hints to the driver on a per-statement basis to avoid unwanted interference of back-pressure hint propagation.</p>
+</div>
+<div class="paragraph">
+<p>Note that back-pressure should be considered a utility for flow control and not to limit the result size.
+Result size limitations should be part of the query statement.</p>
 </div>
 </div>
 </div>
@@ -2078,6 +2143,7 @@ Depending on how the underlying database materializes results, an R2DBC driver c
 <div class="paragraph">
 <p>A <code>Result</code> object is emitted for each statement result in a forward-only direction.</p>
 </div>
+<div style="page-break-after: always;"></div>
 </div>
 <div class="sect2">
 <h3 id="results.creating"><a class="anchor" href="#results.creating"></a>9.2. Creating <code>Result</code> Objects</h3>
@@ -2112,6 +2178,7 @@ Thus, external cursor navigation is not possible.</p>
 <div class="paragraph">
 <p>Canceling subscription of tabular results stops cursor reads and releases any resources associated with the <code>Result</code> object.</p>
 </div>
+<div style="page-break-after: always;"></div>
 </div>
 </div>
 <div class="sect2">
@@ -2600,12 +2667,12 @@ Driver implementations should implement the following type mapping and can suppo
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>CHARACTER LARGE OBJECT</code> (<code>CLOB</code>)</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">A Character Large OBject (or <code>CLOB</code>) is a collection of character data in a DBMS, usually stored in a separate location that is referenced in the table itself.</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>io.r2dbc.spi.Clob</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>java.lang.String</code>, <code>io.r2dbc.spi.Clob</code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>NATIONAL CHARACTER LARGE OBJECT</code> (<code>NCLOB</code>)</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">The <code>NATIONAL CHARACTER LARGE OBJECT</code> type is the same as <code>CHARACTER LARGE OBJECT</code> except that it holds standardized multibyte characters or Unicode characters.</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>io.r2dbc.spi.Clob</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>java.lang.String</code>, <code>io.r2dbc.spi.Clob</code></p></td>
 </tr>
 </tbody>
 </table>
@@ -2665,7 +2732,7 @@ Driver implementations should implement the following type mapping and can suppo
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>BINARY LARGE OBJECT</code> (<code>BLOB</code>)</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">A Binary Large OBject (or <code>BLOB</code>) is a collection of binary data in a database management system, usually stored in a separate location that is referenced in the table itself.</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>io.r2dbc.spi.Blob</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>java.nio.ByteBuffer</code>, <code>io.r2dbc.spi.Blob</code></p></td>
 </tr>
 </tbody>
 </table>
@@ -2848,7 +2915,7 @@ The following example shows how to create a <code>Clob</code> object:</p>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">// charstream is a Publisher&lt;String&gt; object
   // statement is a Statement object
-Clob clob = Clob.from(charstream)
+Clob clob = Clob.from(charstream);
 statement.bind("text", clob);</code></pre>
 </div>
 </div>
@@ -3058,8 +3125,8 @@ If the object is already closed, then subscriptions complete successfully and th
 </div>
 <div id="footer">
 <div id="footer-text">
-Version 0.8.0.RC1<br>
-Last updated 2019-09-10 14:50:18 CDT
+Version 0.8.1.RELEASE<br>
+Last updated 2019-11-25 12:52:33 MEZ
 </div>
 </div>
 <link rel="stylesheet" href="js/highlight/styles/atom-one-dark-reasonable.min.css">
