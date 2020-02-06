@@ -6,11 +6,11 @@ permalink: /resources/
 
 # Stay Connected
 
-* Check out the source on <a class="page-link" href="https://github.com/r2dbc" target="_blank">Github</a>.
+* Check out the source on <a class="page-link" href="https://github.com/r2dbc" target="_blank">GitHub</a>.
 * Follow us on <a class="page-link" href="https://twitter.com/r2dbc" target="_blank">Twitter</a>.
-* R2DBC on <a class="page-link" href="https://gitter.im/R2DBC/r2dbc" target="_blank">Gitter</a>.
-* Questions on <a class="page-link" href="https://stackoverflow.com/questions/tagged/r2dbc" target="_blank">Stackoverflow</a>.
-* Join the discussion at the <a class="page-link" href="https://groups.google.com/forum/#!forum/r2dbc" target="_blank">R2DBC Google Group</a>.
+* Chat about R2DBC on <a class="page-link" href="https://gitter.im/R2DBC/r2dbc" target="_blank">Gitter</a>.
+* Ask questions on <a class="page-link" href="https://stackoverflow.com/questions/tagged/r2dbc" target="_blank">Stack Overflow</a>.
+* Join the discussion on the <a class="page-link" href="https://groups.google.com/forum/#!forum/r2dbc" target="_blank">Google Group</a>.
 
 <!-- # Tutorials and Examples -->
 
@@ -24,7 +24,7 @@ permalink: /resources/
 * [Dan Newton: Spring Data R2DBC for Microsoft SQL Server](https://lankydan.dev/spring-data-r2dbc-for-microsoft-sql-server)
 * [JDBC for Spring WebFlux: Spring Data R2DBC](https://medium.com/w-logs/jdbc-for-spring-webflux-spring-data-r2dbc-99690208cfeb)
 
-# Code Examples
+# Code Samples
 
 * [Spring Data R2DBC](https://github.com/spring-projects/spring-data-examples/tree/4576dc413f1d68636a35fb44cd1c175bbfacea3d/r2dbc/example)
 * [R2DBC Tutorial github.com/lankydan/spring-data-r2dbc](https://github.com/lankydan/spring-data-r2dbc)
@@ -32,8 +32,6 @@ permalink: /resources/
 * [Reactive relational databases with R2DBC and Spring](https://dimitr.im/reactive-relational-databases-r2dbc-spring)
 
 # Videos
-
-Here is a series of videos related to R2DBC.
 
 <iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/tciPoh1vmmY" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
 
@@ -47,11 +45,11 @@ Here is a series of videos related to R2DBC.
 
 <iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/sUXKDGt3QRk" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
 
-# Monthly Call
+# Monthly Calls
 
-The R2DBC working group meets every 1st Friday of a Month at 6:30AM PT (USA Pacific)/9:30AM ET (USA Eastern)/3:30PM CET (Central European) time. 
-Join the call if you want to participate. 
-Meeting minutes and preparation material is available from the [mailing list](https://groups.google.com/forum/#!forum/r2dbc).
+The R2DBC working group meets on the 1st Friday of each month at 6:30 AM PT (USA Pacific) / 9:30 AM ET (USA Eastern) / 3:30PM CET (Central European) time. 
+If you'd like to participate, join the call!
+Meeting minutes and preparation material are available on the [mailing list](https://groups.google.com/forum/#!forum/r2dbc).
 
 Join using your computer or smartphone via:
 
@@ -59,7 +57,7 @@ Join using your computer or smartphone via:
 
 Meeting ID: 371 864 550 
 
-Or Telephone:
+Or telephone:
 
 **Germany**
 
@@ -89,4 +87,4 @@ NOTE: Please use `*6` to mute/un-mute your phone during the call.
 
 # Other
 
-* Help make changes to this <a href="https://github.com/r2dbc/r2dbc.github.io" target="_blank">site</a>!
+* <a href="https://github.com/r2dbc/r2dbc.github.io" target="_blank">Submit changes</a> and help improve this website!
