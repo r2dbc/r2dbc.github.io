@@ -26,7 +26,7 @@ The Reactive Relational Database Connectivity (R2DBC) project brings reactive pr
 
 ## Latest Release
 
-The latest release of R2DBC is 0.8.0.RELEASE. You can [download the spec](/spec/0.8.0.RELEASE/spec/html/) or [browse the Javadoc](/spec/0.8.0.RELEASE/api/).
+The latest release of R2DBC is 0.8.1.RELEASE. You can [download the spec](/spec/0.8.1.RELEASE/spec/html/) or [browse the Javadoc](/spec/0.8.1.RELEASE/api/).
 
 ## Driver Implementations
 
