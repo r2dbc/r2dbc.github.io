@@ -38,9 +38,6 @@ The following connection pool implementations are available for R2DBC:
 
 R2DBC has a clearly-defined SPI, which you must implement to host a solution for your data store. To build an implementation, add the following artifact to your build:
 
-* <strong>Group</strong> <code>io.r2dbc</code>
-* <strong>Artifact</strong> <code>r2dbc-spi</code>
-
 * **Group** `io.r2dbc`
 * **Artifact** `r2dbc-spi`
 
