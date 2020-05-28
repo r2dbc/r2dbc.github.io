@@ -42,8 +42,8 @@ R2DBC has a clearly-defined SPI, which you must implement to host a solution for
 * **Group** `io.r2dbc`
 * **Artifact** `r2dbc-spi`
 
-The key interface that all driver providers must implement is the [`Connection`](https://r2dbc.io/spec/0.8.1.RELEASE/api/io/r2dbc/spi/Connection.html), along with a set of other interfaces.
-Check out the specification for details on [R2DBC Driver Compliance](/spec/0.8.1.RELEASE/spec/html/#compliance).
+The key interface that all driver providers must implement is the [`Connection`](https://r2dbc.io/spec/0.8.2.RELEASE/api/io/r2dbc/spi/Connection.html), along with a set of other interfaces.
+Check out the specification for details on [R2DBC Driver Compliance](/spec/0.8.2.RELEASE/spec/html/#compliance).
 
 There are other parts to implement, but this is the core.
 
