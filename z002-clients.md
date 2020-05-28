@@ -14,6 +14,7 @@ If you're eager to start using R2DBC to build an application, check out the [exi
 * [spring-data-r2dbc](https://github.com/spring-projects/spring-data-r2dbc) - Spring Data client for R2DBC.
 * [Kotysa](https://github.com/pull-vert/kotysa) - Typesafe and Co-routine-ready SQL engine using Kotlin.
 * [jOOQ](https://www.jooq.org/doc/3.13/manual/sql-execution/fetching/reactive-fetching/) - a fluent API for typesafe SQL query construction library.
+* [Testcontainers](https://www.testcontainers.org/modules/databases/r2dbc/) - support to connect and bootstrap a database in a Testcontainer
 
 ## Client Development Under Investigation
 
@@ -25,7 +26,6 @@ If you're eager to start using R2DBC to build an application, check out the [exi
 * Liquibase ([CORE-3419](https://liquibase.jira.com/browse/CORE-3419))
 * Flyway ([#2502](https://github.com/flyway/flyway/issues/2502))
 * Exposed ([(#456](https://github.com/JetBrains/Exposed/issues/456))
-* Testcontainers ([#1003](https://github.com/testcontainers/testcontainers-java/issues/1003))
 
 ## Writing a Client
 
