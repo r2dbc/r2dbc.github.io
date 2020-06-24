@@ -9,7 +9,7 @@ permalink: /drivers/
 R2DBC defines an SPI all data store drivers must implement.
 
 * [r2dbc-spi](https://github.com/r2dbc/r2dbc-spi): a set of interfaces defining the SPI for R2DBC.
-* [r2dbc-spi-test](https://github.com/r2dbc/r2dbc-spi/tree/master/r2dbc-spi-test): within the SPI repository, a Technology Compatibility Kit (TCK) for verifying a driver's implementation.
+* [r2dbc-spi-test](https://github.com/r2dbc/r2dbc-spi/tree/main/r2dbc-spi-test): within the SPI repository, a Technology Compatibility Kit (TCK) for verifying a driver's implementation.
 
 One noticeable difference between R2DBC and JDBC is that JDBC is aimed at both driver writers and application developers. Driver developers and application developers operate at different levels, making this one-size-fits-all model less than ideal.
 
@@ -56,4 +56,4 @@ R2DBC also has a suite of test cases to verify your driver's support. Your data 
 
 To run all of the expected tests, write an implementation of the TCK's `TestKit<T>` test.
 
-See the [example in r2dbc-postgresql](https://github.com/r2dbc/r2dbc-postgresql/blob/master/src/test/java/io/r2dbc/postgresql/PostgresqlTestKit.java) to read the full source.
+See the [example in r2dbc-postgresql](https://github.com/r2dbc/r2dbc-postgresql/blob/main/src/test/java/io/r2dbc/postgresql/PostgresqlTestKit.java) to read the full source.
