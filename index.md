@@ -60,8 +60,8 @@ R2DBC aims for a minimal SPI surface, specifying only parts that differ across d
 
 # Cloud Ready
 
-R2DBC supports [cloud native](https://pivotal.io/cloud-native) applications using relational databases such as PostgreSQL, MySQL, and others. Application developers are free to pick the right database for the job without being confined by APIs.
+R2DBC supports cloud-native applications using relational databases such as PostgreSQL, MySQL, and others. Application developers are free to pick the right database for the job without being confined by APIs.
 
 # Community
 
-While led by members of the Spring team at Pivotal, R2DBC depends upon community support. We invite contributors from all relational data stores to participate in building a reactive relational future.
+R2DBC depends upon community support as it is built by and for the community. We invite contributors from all relational data stores to participate in building a reactive relational future.
