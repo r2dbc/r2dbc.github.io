@@ -16,6 +16,7 @@ permalink: /resources/
 
 # Blog Posts
 
+* [Introducing the MariaDB R2DBC Java connector](https://mariadb.com/openworks/sessions-on-demand/introducing-the-r2dbc-async-java-connector/)
 * [Baeldung: R2DBC](https://www.baeldung.com/r2dbc)
 * [Charles Humble: Reactive Relational Database Connectivity Driver, R2DBC](https://www.infoq.com/news/2018/10/springone-r2dbc)
 * [Mark Paluch: Reactive Programming and Relational Databases](https://spring.io/blog/2018/12/07/reactive-programming-and-relational-databases)
@@ -33,7 +34,9 @@ permalink: /resources/
 
 # Videos
 
-<iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/tciPoh1vmmY" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+<iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/xPCMpXXGsUw" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+
+<iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/34HWqXSeN90" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
 
 <iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/E3s5f-JF8z4?start=520" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
 
