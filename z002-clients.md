@@ -25,7 +25,7 @@ If you're eager to start using R2DBC to build an application, check out the [exi
 * Helidon ([#581](https://github.com/oracle/helidon/issues/581))
 * Liquibase ([CORE-3419](https://liquibase.jira.com/browse/CORE-3419))
 * Flyway ([#2502](https://github.com/flyway/flyway/issues/2502))
-* Exposed ([(#456](https://github.com/JetBrains/Exposed/issues/456))
+* Exposed ([#456](https://github.com/JetBrains/Exposed/issues/456))
 
 ## Writing a Client
 
