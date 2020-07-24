@@ -17,7 +17,7 @@ R2DBC's SPI is deliberately designed to be as small as possible, while still inc
 
 To ease implementation, R2DBC also provides a test interface (a veritable TCK) to ensure your driver is fully operational.
 
-# Existing Drivers
+# Driver Implementations
 
 R2DBC drivers implement the SPI listed above. The ones currently supported include:
 
@@ -34,6 +34,10 @@ R2DBC drivers implement the SPI listed above. The ones currently supported inclu
 The following connection pool implementations are available for R2DBC:
 
 * [r2dbc-pool](https://github.com/r2dbc/r2dbc-pool) - reactive connection pooling using Reactor Pool.
+
+# Observability
+
+Observability is provided through [`r2dbc-proxy`](https://github.com/r2dbc/r2dbc-proxy).
 
 # Implementing a Driver
 

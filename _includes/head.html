@@ -11,4 +11,12 @@
   <link rel="alternate" type="application/rss+xml" title="{{ site.title }}" href="{{ "/feed.xml" | prepend: site.baseurl | prepend: site.url }}">
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
 
+  <meta property="og:title" content="R2DBC">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://r2dbc.io/">
+  <meta property="og:description" content="{% if page.excerpt %}{{ page.excerpt | strip_html | strip_newlines | truncate: 160 }}{% else %}{{ site.description }}{% endif %}">
+  <meta property="og:image" content="https://r2dbc.io/images/PVLG-R2DBC-Icon-RGB.png">
+  <meta name="twitter:card" content="summary">
+  <link rel="shortcut icon" href="/images/PVLG-R2DBC-Icon-RGB.png">
+
 </head>

@@ -1,0 +1,32 @@
+.tab_links {
+  margin-left: 0px;
+}
+
+.tab_links li {
+  cursor: pointer;
+  list-style: none;
+  float: left;
+  margin-right: 3px;
+  padding: 10px 40px;
+  background: $header-color;
+  color: $brand-color;
+}
+
+.tab_links li:hover {
+  background: lighten($brand-color, 60%);
+}
+
+.tab_box {
+  min-height: 200px;
+  width: 100%;
+  margin: 10px 0 5px 0;
+  border: 1px dashed $brand-color-light;
+  padding: 10px;
+
+  font-family: 'Source Sans Pro', sans-serif;
+  color: $brand-color;
+
+  .highlight {
+    margin-bottom: 0;
+  }
+}

@@ -2,6 +2,10 @@
 layout: default
 ---
 
+<h2 class="keyvisual">
+<img src="images/PVLG-R2DBC-Logo-RGB.png" alt="R2DBC Logo">
+</h2>
+
 The Reactive Relational Database Connectivity (R2DBC) project brings reactive programming APIs to relational databases.
 
 # In a Nutshell
@@ -14,39 +18,74 @@ The Reactive Relational Database Connectivity (R2DBC) project brings reactive pr
 
 **Provides an open specification.** R2DBC is an open specification and establishes a Service Provider Interface (SPI) for driver vendors to implement and clients to consume.
 
+**Example Query**
+ 
+<ul class="tab_links">
+  <li id="tab1"><img src="/images/projectreactor.png" alt="Project Reactor" width="20" /> Project Reactor</li>
+  <li id="tab2"><img src="/images/reactivex.png" alt="RxJava" width="20"/> RxJava</li>
+  <li id="tab3"><img src="/images/smallrye.png" alt="RxJava" width="20"/> Smallrye Mutiny</li>
+</ul>
+<div style='clear:both;'></div>
+<div class="tab_box" id='home_tab1'>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">ConnectionFactory</span> <span class="n">connectionFactory</span> <span class="o">=</span> <span class="n">ConnectionFactories</span>
+  <span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="s">"r2dbc:h2:mem:///testdb"</span><span class="o">);</span>
+
+<span class="n">Mono</span><span class="o">.</span><span class="na">from</span><span class="o">(</span><span class="n">connectionFactory</span><span class="o">.</span><span class="na">create</span><span class="o">())</span>
+  <span class="o">.</span><span class="na">flatMapMany</span><span class="o">(</span><span class="n">connection</span> <span class="o">-&gt;</span> <span class="n">connection</span>
+    <span class="o">.</span><span class="na">createStatement</span><span class="o">(</span><span class="s">"SELECT firstname FROM PERSON WHERE age &gt; $1"</span><span class="o">)</span>
+    <span class="o">.</span><span class="na">bind</span><span class="o">(</span><span class="s">"$1"</span><span class="o">,</span> <span class="mi">42</span><span class="o">)</span>
+    <span class="o">.</span><span class="na">execute</span><span class="o">())</span>
+  <span class="o">.</span><span class="na">flatMap</span><span class="o">(</span><span class="n">result</span> <span class="o">-&gt;</span> <span class="n">result</span>
+    <span class="o">.</span><span class="na">map</span><span class="o">((</span><span class="n">row</span><span class="o">,</span> <span class="n">rowMetadata</span><span class="o">)</span> <span class="o">-&gt;</span> <span class="n">row</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="s">"firstname"</span><span class="o">,</span> <span class="n">String</span><span class="o">.</span><span class="na">class</span><span class="o">)))</span>
+  <span class="o">.</span><span class="na">doOnNext</span><span class="o">(</span><span class="n">firstname</span> <span class="o">-&gt;</span> <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">firstname</span><span class="o">))</span>
+  <span class="o">.</span><span class="na">subscribe</span><span class="o">();</span>
+</code></pre></div></div>
+</div>
+<div class="tab_box" id='home_tab2'>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">ConnectionFactory</span> <span class="n">connectionFactory</span> <span class="o">=</span> <span class="n">ConnectionFactories</span>
+  <span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="s">"r2dbc:h2:mem:///testdb"</span><span class="o">);</span>
+
+<span class="n">Single</span><span class="o">.</span><span class="na">fromPublisher</span><span class="o">(</span><span class="n">connectionFactory</span><span class="o">.</span><span class="na">create</span><span class="o">()).</span><span class="na">toFlowable</span><span class="o">()</span>
+  <span class="o">.</span><span class="na">flatMap</span><span class="o">(</span><span class="n">connection</span> <span class="o">-&gt;</span> <span class="n">connection</span>
+    <span class="o">.</span><span class="na">createStatement</span><span class="o">(</span><span class="s">"SELECT firstname FROM PERSON WHERE age &gt; $1"</span><span class="o">)</span>
+    <span class="o">.</span><span class="na">bind</span><span class="o">(</span><span class="s">"$1"</span><span class="o">,</span> <span class="mi">42</span><span class="o">)</span>
+    <span class="o">.</span><span class="na">execute</span><span class="o">())</span>
+  <span class="o">.</span><span class="na">flatMap</span><span class="o">(</span><span class="n">result</span> <span class="o">-&gt;</span> <span class="n">result</span>
+    <span class="o">.</span><span class="na">map</span><span class="o">((</span><span class="n">row</span><span class="o">,</span> <span class="n">rowMetadata</span><span class="o">)</span> <span class="o">-&gt;</span> <span class="n">row</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="s">"firstname"</span><span class="o">,</span> <span class="n">String</span><span class="o">.</span><span class="na">class</span><span class="o">)))</span>
+  <span class="o">.</span><span class="na">doOnNext</span><span class="o">(</span><span class="n">firstname</span> <span class="o">-&gt;</span> <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">firstname</span><span class="o">))</span>
+  <span class="o">.</span><span class="na">subscribe</span><span class="o">();</span>
+</code></pre></div></div>
+</div>
+<div class="tab_box" id='home_tab3'>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">ConnectionFactory</span> <span class="n">connectionFactory</span> <span class="o">=</span> <span class="n">ConnectionFactories</span>
+  <span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="s">"r2dbc:h2:mem:///testdb"</span><span class="o">);</span>
+
+<span class="n">Uni</span><span class="o">.</span><span class="na">createFrom</span><span class="o">().</span><span class="na">publisher</span><span class="o">(</span><span class="n">connectionFactory</span><span class="o">.</span><span class="na">create</span><span class="o">())</span>
+  <span class="o">.</span><span class="na">toMulti</span><span class="o">()</span>
+  <span class="o">.</span><span class="na">flatMap</span><span class="o">(</span><span class="n">connection</span> <span class="o">-&gt;</span> <span class="n">connection</span>
+    <span class="o">.</span><span class="na">createStatement</span><span class="o">(</span><span class="s">"SELECT firstname FROM PERSON WHERE age &gt; $1"</span><span class="o">)</span>
+    <span class="o">.</span><span class="na">bind</span><span class="o">(</span><span class="s">"$1"</span><span class="o">,</span> <span class="mi">42</span><span class="o">)</span>
+    <span class="o">.</span><span class="na">execute</span><span class="o">())</span>
+  <span class="o">.</span><span class="na">flatMap</span><span class="o">(</span><span class="n">result</span> <span class="o">-&gt;</span> <span class="n">result</span>
+    <span class="o">.</span><span class="na">map</span><span class="o">((</span><span class="n">row</span><span class="o">,</span> <span class="n">rowMetadata</span><span class="o">)</span> <span class="o">-&gt;</span> <span class="n">row</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="s">"firstname"</span><span class="o">,</span> <span class="n">String</span><span class="o">.</span><span class="na">class</span><span class="o">)))</span>
+  <span class="o">.</span><span class="na">on</span><span class="o">()</span>
+    <span class="o">.</span><span class="na">item</span><span class="o">().</span><span class="na">invoke</span><span class="o">(</span><span class="n">firstname</span> <span class="o">-&gt;</span> <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">firstname</span><span class="o">))</span>
+  <span class="o">.</span><span class="na">subscribe</span><span class="o">();</span>
+</code></pre></div></div>
+</div>
+
 # Features
 
-* Broad type conversion
-* Transactions, isolation levels, and save points
-* Batching
-* BLOB/CLOB
-* Connection URLs
+* [Broad type conversion](/spec/0.8.2.RELEASE/spec/html/#datatypes)
+* [Transactions, isolation levels, and save points](/spec/0.8.2.RELEASE/spec/html/#transactions)
+* [Batching](/spec/0.8.2.RELEASE/spec/html/#batches)
+* [BLOB/CLOB support](/spec/0.8.2.RELEASE/spec/html/#datatypes.mapping.advanced)
+* [Connection URLs](/spec/0.8.2.RELEASE/spec/html/#overview.connection.url) (`r2dbc:<driver>://<host>:<port>/<database>`)
 * `ConnectionFactory` discovery and configuration based on Java's `ServiceLoader`
-* Observability
-
-## Latest Release
-
-The latest release of R2DBC is 0.8.2.RELEASE. You can [download the spec](/spec/0.8.2.RELEASE/spec/html/) or [browse the Javadoc](/spec/0.8.2.RELEASE/api/).
-
-## Driver Implementations
-
-For more information, see the [Drivers](/drivers/) page.
-
-* [cloud-spanner-r2dbc](https://github.com/GoogleCloudPlatform/cloud-spanner-r2dbc): driver for Google Cloud Spanner
-* [jasync-sql](https://github.com/jasync-sql/jasync-sql): R2DBC wrapper for Java & Kotlin Async Database Driver for MySQL and PostgreSQL written in Kotlin.
-* [r2dbc-h2](https://github.com/r2dbc/r2dbc-h2): native driver implemented for H2 as a test database.
-* [r2dbc-mariadb](https://github.com/mariadb-corporation/mariadb-connector-r2dbc): native driver implemented for MariaDB.
-* [r2dbc-mssql](https://github.com/r2dbc/r2dbc-mssql): native driver implemented for Microsoft SQL Server.
-* [r2dbc-mysql](https://github.com/mirromutth/r2dbc-mysql): native driver implemented for MySQL.
-* [r2dbc-postgres](https://github.com/r2dbc/r2dbc-postgresql): native driver implemented for PostgreSQL.
-
-## Connection Pooling
-
-Connection pooling is provided through the reactive connection pool implementation in [`r2dbc-pool`](https://github.com/r2dbc/r2dbc-pool).
-
-## Observability
-
-Observability is provided through [`r2dbc-proxy`](https://github.com/r2dbc/r2dbc-proxy).
+* [Typed Exceptions](/spec/0.8.2.RELEASE/spec/html/#exceptions)
+* [Extensible Interface](/spec/0.8.2.RELEASE/spec/html/#extensions)
+* [Observability](https://github.com/r2dbc/r2dbc-proxy/)
+* [TCK](/spec/0.8.2.RELEASE/spec/html/#compliance)
 
 # Relational Meets Reactive
 
@@ -64,4 +103,36 @@ R2DBC supports cloud-native applications using relational databases such as Post
 
 # Community
 
-R2DBC depends upon community support as it is built by and for the community. We invite contributors from all relational data stores to participate in building a reactive relational future.
+Join the [R2DBC Community Forum](https://groups.google.com/g/r2dbc) to learn more about R2DBC, get your R2DBC questions answered, and interact with other R2DBC developers.
+
+<script src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+<script>
+function hideOtherTabs(tabList, tab, tabPrefix){
+	
+	for	(index = 0; index < tabList.length; index++) {
+		if(tabPrefix+tab!=tabPrefix+tabList[index]){
+			$('div#'+tabPrefix+tabList[index]).hide();
+		}
+	}
+}
+
+$(document).ready( function(){
+ 
+	var tabPrefix = 'home_';
+	var tabs = ['tab1', 'tab2', 'tab3'];
+	
+	for	(index = 1; index < tabs.length; index++) {
+		jQuery('div#'+tabPrefix+tabs[index]).hide();
+	}
+		
+	$('ul.tab_links li').click( function(){
+		 
+		var tabID = $(this).attr('id');
+		//show this tab
+		$('div#'+tabPrefix+tabID).show();
+		
+		//hide others
+		hideOtherTabs(tabs,tabID,tabPrefix);
+	});
+});
+</script>

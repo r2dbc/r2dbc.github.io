@@ -2,18 +2,42 @@
  * Site header
  */
 .site-header {
-    border-top: 5px solid $grey-color-dark;
-    border-bottom: 1px solid $grey-color-light;
-    min-height: 56px;
+    display: flex;
+    flex-flow: row nowrap;
+    text-align: left;
+    min-height: 50px;
 
     // Positioning context for the mobile navigation icon
     position: relative;
+
+    a.site-title {
+        flex-flow: row nowrap;
+        height: 34px;
+        z-index: 10000;
+    }
+    .logo {
+        height: 100%;
+        margin-right: 10px;
+        margin-top: -5px;
+    }
+}
+
+.header-container {
+    padding: 0;
+    position: fixed;
+    width: 100%;
+    z-index: 9999;
+    transform: translateZ(0);
+    background: $header-color;
+
+    border-top: 5px solid $brand-color;
+    border-bottom: 1px solid $brand-color-light;
 }
 
 .site-title {
     font-size: 26px;
     font-weight: 300;
-    line-height: 56px;
+    line-height: 50px;
     letter-spacing: -1px;
     margin-bottom: 0;
     float: left;
@@ -26,7 +50,7 @@
 
 .site-nav {
     float: right;
-    line-height: 56px;
+    line-height: 50px;
 
     .menu-icon {
         display: none;
@@ -38,7 +62,7 @@
 
         // Gaps between nav items, but not on the last one
         &:not(:last-child) {
-            margin-right: 20px;
+            margin-right: 1em;
         }
     }
 
@@ -62,9 +86,9 @@
         }
     }
 
-    .fa-gitub {
+    .fa-github {
         &:hover {
-            color: #333;
+            color: #666666;
         }
     }
 
@@ -75,7 +99,7 @@
         background-color: $background-color;
         border: 1px solid $grey-color-light;
         border-radius: 5px;
-        text-align: right;
+
 
         .menu-icon {
             display: block;
@@ -113,9 +137,11 @@
             &:not(:last-child) {
                 margin-right: 0;
             }
-            margin-left: 20px;
         }
     }
+
+    margin-left: auto;
+    position: relative;
 }
 
 
@@ -124,8 +150,19 @@
  * Site footer
  */
 .site-footer {
-    border-top: 1px solid $grey-color-light;
+    border-top: 1px solid $brand-color-light;
     padding: $spacing-unit 0;
+
+    background: $header-color;
+    color: #202020;
+    font-size: 15px;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    font-weight: 400;
+    line-height: 24px;
+    padding-bottom: 2em;
+    padding-top: 2em;
+    position: relative;
 }
 
 .footer-heading {
@@ -144,6 +181,11 @@
     color: $grey-color;
     margin-left: -$spacing-unit / 2;
     @extend %clearfix;
+
+    .header {
+        font-weight: 500;
+        padding: 0.5em 0;
+    }
 }
 
 .footer-col {
@@ -194,7 +236,7 @@
  * Page content
  */
 .page-content {
-    padding: $spacing-unit 0;
+    padding: 75px 0;
 }
 
 .page-heading {
@@ -220,7 +262,9 @@
     font-size: 24px;
 }
 
-
+.keyvisual {
+    padding: 20px 0;
+}
 
 /**
  * Posts
