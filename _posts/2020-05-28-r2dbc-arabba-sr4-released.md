@@ -17,7 +17,7 @@ This service release includes updates to:
 * [R2DBC SPI - 0.8.2.RELEASE](https://github.com/r2dbc/r2dbc-spi/milestone/10?closed=1) (`io.r2dbc:r2dbc-spi`)
 * [R2DBC H2 - 0.8.4.RELEASE](https://github.com/r2dbc/r2dbc-h2/milestone/10?closed=1) (`io.r2dbc:r2dbc-h2`)
 * [R2DBC Microsoft SQL Server driver - 0.8.3.RELEASE](https://github.com/r2dbc/r2dbc-mssql/milestone/9?closed=1) (`io.r2dbc:r2dbc-mssql`)
-* [R2DBC PosgreSQL driver - 0.8.3.RELEASE](https://github.com/r2dbc/r2dbc-postgresql/milestone/12?closed=1)  (`io.r2dbc:r2dbc-postgresql`)
+* [R2DBC PostgreSQL driver - 0.8.3.RELEASE](https://github.com/r2dbc/r2dbc-postgresql/milestone/12?closed=1)  (`io.r2dbc:r2dbc-postgresql`)
 * [R2DBC Pool - 0.8.3.RELEASE](https://github.com/r2dbc/r2dbc-pool/milestone/8?closed=1) (`io.r2dbc:r2dbc-pool`)
 
 This is a maintenance release with patches and fixes, but nothing breaking. Feel free to check the ticket logs above for the module you're interested in.
