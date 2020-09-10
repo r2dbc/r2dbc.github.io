@@ -34,6 +34,8 @@ permalink: /resources/
 
 # Videos
 
+<iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/t7oLx9RJkB8?t=352" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+
 <iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/5tnipoyBZmc?t=2010" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
 
 <iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/xPCMpXXGsUw" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
