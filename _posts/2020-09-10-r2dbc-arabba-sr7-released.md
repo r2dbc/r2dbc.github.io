@@ -12,12 +12,16 @@ It is my pleasure to announce that R2DBC has released it's seventh service relea
 
 R2DBC enables the Java platform with a reactive, non-blocking way to access relational databases via SQL.
 
-This service release includes updates to:
+We are excited to announce that this version includes the R2DBC MariaDB connector:
+
+* [R2DBC MariaDB connector - 0.8.3.RELEASE](https://github.com/mariadb-corporation/mariadb-connector-r2dbc/releases/tag/0.8.3) (`org.mariadb:r2dbc-mariadb`)
+
+This service release ships also updates to:
 
 * [R2DBC PostgreSQL driver - 0.8.5.RELEASE](https://github.com/pgjdbc/r2dbc-postgresql/milestone/14?closed=1)  (`io.r2dbc:r2dbc-postgresql`)
 * [R2DBC Pool - 0.8.4.RELEASE](https://github.com/r2dbc/r2dbc-pool/milestone/9?closed=1) (`io.r2dbc:r2dbc-pool`)
 
-This is a maintenance release with patches and fixes, but nothing breaking. Feel free to check the ticket logs above for the module you're interested in.
+This is a maintenance release shipping with mostly bugfixes fixes, selected enhancements, and dependency upgrades. Check out the changelogs associated with each component.
 
 Check out this latest video, where Greg Turnquist presents R2DBC to the Atlanta JUG:
 
@@ -42,22 +46,11 @@ If you use Maven, you can add the following lines to your `pom.xml`:
 
 <dependencies>
   <dependency>
-    <groupId>io.r2dbc</groupId>
-    <artifactId>r2dbc-postgresql</artifactId>
-  </dependency>
-
-  <dependency>
-    <groupId>io.r2dbc</groupId>
-    <artifactId>r2dbc-pool</artifactId>
+    <groupId>org.mariadb</groupId>
+    <artifactId>r2dbc-mariadb</artifactId>
   </dependency>
 </dependencies>
 ```
-
-### Next Steps
-
-R2DBC 0.8 is the first release of the open standard. We're expecting maintenance releases shipping minor revisions of the specification and drivers over the course of the next months. 
-We're looking towards a 0.9 revision of R2DBC: Stored procedures, extensions to transaction definitions, and a specification for database events are only a few topics planned for the next iteration.
-Join the [community](https://r2dbc.io/resources) to get involved and to follow development closely.
 
 Cheers, 
 
