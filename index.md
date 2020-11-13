@@ -60,17 +60,14 @@ The Reactive Relational Database Connectivity (R2DBC) project brings reactive pr
 <div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">ConnectionFactory</span> <span class="n">connectionFactory</span> <span class="o">=</span> <span class="n">ConnectionFactories</span>
   <span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="s">"r2dbc:h2:mem:///testdb"</span><span class="o">);</span>
 
-<span class="n">Uni</span><span class="o">.</span><span class="na">createFrom</span><span class="o">().</span><span class="na">publisher</span><span class="o">(</span><span class="n">connectionFactory</span><span class="o">.</span><span class="na">create</span><span class="o">())</span>
-  <span class="o">.</span><span class="na">toMulti</span><span class="o">()</span>
-  <span class="o">.</span><span class="na">flatMap</span><span class="o">(</span><span class="n">connection</span> <span class="o">-&gt;</span> <span class="n">connection</span>
+<span class="nc">Uni</span><span class="o">.</span><span class="na">createFrom</span><span class="o">().</span><span class="na">publisher</span><span class="o">(</span><span class="n">connectionFactory</span><span class="o">.</span><span class="na">create</span><span class="o">())</span>
+  <span class="o">.</span><span class="na">onItem</span><span class="o">().</span><span class="na">transformToMulti</span><span class="o">(</span><span class="n">connection</span> <span class="o">-&gt;</span> <span class="n">connection</span>
     <span class="o">.</span><span class="na">createStatement</span><span class="o">(</span><span class="s">"SELECT firstname FROM PERSON WHERE age &gt; $1"</span><span class="o">)</span>
     <span class="o">.</span><span class="na">bind</span><span class="o">(</span><span class="s">"$1"</span><span class="o">,</span> <span class="mi">42</span><span class="o">)</span>
     <span class="o">.</span><span class="na">execute</span><span class="o">())</span>
-  <span class="o">.</span><span class="na">flatMap</span><span class="o">(</span><span class="n">result</span> <span class="o">-&gt;</span> <span class="n">result</span>
-    <span class="o">.</span><span class="na">map</span><span class="o">((</span><span class="n">row</span><span class="o">,</span> <span class="n">rowMetadata</span><span class="o">)</span> <span class="o">-&gt;</span> <span class="n">row</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="s">"firstname"</span><span class="o">,</span> <span class="n">String</span><span class="o">.</span><span class="na">class</span><span class="o">)))</span>
-  <span class="o">.</span><span class="na">on</span><span class="o">()</span>
-    <span class="o">.</span><span class="na">item</span><span class="o">().</span><span class="na">invoke</span><span class="o">(</span><span class="n">firstname</span> <span class="o">-&gt;</span> <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">firstname</span><span class="o">))</span>
-  <span class="o">.</span><span class="na">subscribe</span><span class="o">();</span>
+  <span class="o">.</span><span class="na">onItem</span><span class="o">().</span><span class="na">transform</span><span class="o">(</span><span class="n">result</span> <span class="o">-&gt;</span> <span class="n">result</span>
+    <span class="o">.</span><span class="na">map</span><span class="o">((</span><span class="n">row</span><span class="o">,</span> <span class="n">rowMetadata</span><span class="o">)</span> <span class="o">-&gt;</span> <span class="n">row</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="s">"firstname"</span><span class="o">,</span> <span class="nc">String</span><span class="o">.</span><span class="na">class</span><span class="o">)))</span>
+  <span class="o">.</span><span class="na">subscribe</span><span class="o">().</span><span class="na">with</span><span class="o">(</span><span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">::</span><span class="n">println</span><span class="o">);</span>
 </code></pre></div></div>
 </div>
 
