@@ -37,7 +37,7 @@ The Reactive Relational Database Connectivity (R2DBC) project brings reactive pr
     <span class="o">.</span><span class="na">execute</span><span class="o">())</span>
   <span class="o">.</span><span class="na">flatMap</span><span class="o">(</span><span class="n">result</span> <span class="o">-&gt;</span> <span class="n">result</span>
     <span class="o">.</span><span class="na">map</span><span class="o">((</span><span class="n">row</span><span class="o">,</span> <span class="n">rowMetadata</span><span class="o">)</span> <span class="o">-&gt;</span> <span class="n">row</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="s">"firstname"</span><span class="o">,</span> <span class="n">String</span><span class="o">.</span><span class="na">class</span><span class="o">)))</span>
-  <span class="o">.</span><span class="na">doOnNext</span><span class="o">(</span><span class="n">firstname</span> <span class="o">-&gt;</span> <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">firstname</span><span class="o">))</span>
+  <span class="o">.</span><span class="na">doOnNext</span><span class="o">(</span><span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">::</span><span class="n">println</span><span class="o">)</span>
   <span class="o">.</span><span class="na">subscribe</span><span class="o">();</span>
 </code></pre></div></div>
 </div>
@@ -52,7 +52,7 @@ The Reactive Relational Database Connectivity (R2DBC) project brings reactive pr
     <span class="o">.</span><span class="na">execute</span><span class="o">())</span>
   <span class="o">.</span><span class="na">flatMap</span><span class="o">(</span><span class="n">result</span> <span class="o">-&gt;</span> <span class="n">result</span>
     <span class="o">.</span><span class="na">map</span><span class="o">((</span><span class="n">row</span><span class="o">,</span> <span class="n">rowMetadata</span><span class="o">)</span> <span class="o">-&gt;</span> <span class="n">row</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="s">"firstname"</span><span class="o">,</span> <span class="n">String</span><span class="o">.</span><span class="na">class</span><span class="o">)))</span>
-  <span class="o">.</span><span class="na">doOnNext</span><span class="o">(</span><span class="n">firstname</span> <span class="o">-&gt;</span> <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">firstname</span><span class="o">))</span>
+  <span class="o">.</span><span class="na">doOnNext</span><span class="o">(</span><span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">::</span><span class="n">println</span><span class="o">)</span>
   <span class="o">.</span><span class="na">subscribe</span><span class="o">();</span>
 </code></pre></div></div>
 </div>
