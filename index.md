@@ -73,16 +73,16 @@ The Reactive Relational Database Connectivity (R2DBC) project brings reactive pr
 
 # Features
 
-* [Broad type conversion](/spec/0.8.3.RELEASE/spec/html/#datatypes)
-* [Transactions, isolation levels, and save points](/spec/0.8.3.RELEASE/spec/html/#transactions)
-* [Batching](/spec/0.8.3.RELEASE/spec/html/#batches)
-* [BLOB/CLOB support](/spec/0.8.3.RELEASE/spec/html/#datatypes.mapping.advanced)
-* [Connection URLs](/spec/0.8.3.RELEASE/spec/html/#overview.connection.url) (`r2dbc:<driver>://<host>:<port>/<database>`)
+* [Broad type conversion](/spec/0.8.4.RELEASE/spec/html/#datatypes)
+* [Transactions, isolation levels, and save points](/spec/0.8.4.RELEASE/spec/html/#transactions)
+* [Batching](/spec/0.8.4.RELEASE/spec/html/#batches)
+* [BLOB/CLOB support](/spec/0.8.4.RELEASE/spec/html/#datatypes.mapping.advanced)
+* [Connection URLs](/spec/0.8.4.RELEASE/spec/html/#overview.connection.url) (`r2dbc:<driver>://<host>:<port>/<database>`)
 * `ConnectionFactory` discovery and configuration based on Java's `ServiceLoader`
-* [Typed Exceptions](/spec/0.8.3.RELEASE/spec/html/#exceptions)
-* [Extensible Interface](/spec/0.8.3.RELEASE/spec/html/#extensions)
+* [Typed Exceptions](/spec/0.8.4.RELEASE/spec/html/#exceptions)
+* [Extensible Interface](/spec/0.8.4.RELEASE/spec/html/#extensions)
 * [Observability](https://github.com/r2dbc/r2dbc-proxy/)
-* [TCK](/spec/0.8.3.RELEASE/spec/html/#compliance)
+* [TCK](/spec/0.8.4.RELEASE/spec/html/#compliance)
 
 # Relational Meets Reactive
 
