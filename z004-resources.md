@@ -60,9 +60,10 @@ Meeting minutes and preparation material are available on the [mailing list](htt
 
 Join using your computer or smartphone via:
 
-[https://zoom.us/j/371864550](https://zoom.us/j/371864550)
+[https://zoom.us/j/97336955603?pwd=VWZTWmZib01YRXlTVzVIVkxIZ05Kdz09](https://zoom.us/j/97336955603?pwd=VWZTWmZib01YRXlTVzVIVkxIZ05Kdz09)
 
-Meeting ID: 371 864 550 
+Meeting ID: 973 3695 5603
+Pass code: 234867
 
 Or telephone:
 
@@ -86,7 +87,7 @@ Or telephone:
 * +33 (0) 7 5678 4048 France
 * +33 8 0508 2588 France Toll Free
 
-Other international numbers available: [https://zoom.us/zoomconference?m=ddKUsXGa2tGOHvCl4ccI0juqU7TZaCov](https://zoom.us/zoomconference?m=ddKUsXGa2tGOHvCl4ccI0juqU7TZaCov)
+Other international numbers available: [https://zoom.us/zoomconference](https://zoom.us/zoomconference)
 
 Here is a link to a [World Time Zone Converter](https://www.thetimezoneconverter.com/?t=6:30%20a.m.%20&tz=San%20Francisco).
 
