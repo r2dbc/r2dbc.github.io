@@ -14,8 +14,13 @@ permalink: /resources/
 
 <!-- # Tutorials and Examples -->
 
+# Books
+
+* [R2DBC Revealed](https://www.apress.com/gp/book/9781484269886) by Robert Hedgpeth
+
 # Blog Posts
 
+* [Handle the new R2DBC specification in Java](https://www.sipios.com/blog-tech/handle-the-new-r2dbc-specification-in-java)
 * [Introducing the MariaDB R2DBC Java connector](https://mariadb.com/openworks/sessions-on-demand/introducing-the-r2dbc-async-java-connector/)
 * [Baeldung: R2DBC](https://www.baeldung.com/r2dbc)
 * [Charles Humble: Reactive Relational Database Connectivity Driver, R2DBC](https://www.infoq.com/news/2018/10/springone-r2dbc)
