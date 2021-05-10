@@ -7,7 +7,7 @@
 
 # Site settings
 title: R2DBC
-email: r2dbc@pivotal.io
+email: r2dbc@vmware.com
 description: > # this means to ignore newlines until "baseurl:"
   R2DBC 0.8.1.RELEASE: A standard API for reactive programming using SQL databases.
 baseurl: "" # the subpath of your site, e.g. /blog
