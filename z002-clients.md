@@ -20,7 +20,6 @@ If you're eager to start using R2DBC to build an application, check out the [exi
 
 * MyBatis ([#1444](https://github.com/mybatis/mybatis-3/issues/1444))
 * JDBI ([#1454](https://github.com/jdbi/jdbi/issues/1454))
-* jOOQ ([#6298](https://github.com/jOOQ/jOOQ/issues/6298))
 * Querydsl ([#2468](https://github.com/querydsl/querydsl/issues/2468))
 * Helidon ([#581](https://github.com/oracle/helidon/issues/581))
 * Liquibase ([CORE-3419](https://liquibase.jira.com/browse/CORE-3419))
