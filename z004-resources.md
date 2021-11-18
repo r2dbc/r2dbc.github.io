@@ -20,6 +20,7 @@ permalink: /resources/
 
 # Blog Posts
 
+* [Reactive SQL with jOOQ and R2DBC](https://blog.jooq.org/reactive-sql-with-jooq-3-15-and-r2dbc/)
 * [Handle the new R2DBC specification in Java](https://www.sipios.com/blog-tech/handle-the-new-r2dbc-specification-in-java)
 * [Introducing the MariaDB R2DBC Java connector](https://mariadb.com/openworks/sessions-on-demand/introducing-the-r2dbc-async-java-connector/)
 * [Baeldung: R2DBC](https://www.baeldung.com/r2dbc)
@@ -38,6 +39,8 @@ permalink: /resources/
 * [Reactive relational databases with R2DBC and Spring](https://dimitr.im/reactive-relational-databases-r2dbc-spring)
 
 # Videos
+
+<iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/Zkcy0tlYJpI?start=352" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
 
 <iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/t7oLx9RJkB8?start=352" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
 
