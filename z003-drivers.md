@@ -47,8 +47,8 @@ R2DBC has a clearly-defined SPI, which you must implement to host a solution for
 * **Group** `io.r2dbc`
 * **Artifact** `r2dbc-spi`
 
-The key interface that all driver providers must implement is the [`Connection`](https://r2dbc.io/spec/0.8.2.RELEASE/api/io/r2dbc/spi/Connection.html), along with a set of other interfaces.
-Check out the specification for details on [R2DBC Driver Compliance](/spec/0.8.2.RELEASE/spec/html/#compliance).
+The key interface that all driver providers must implement is the [`Connection`](https://r2dbc.io/spec/0.9.0.RELEASE/api/io/r2dbc/spi/Connection.html), along with a set of other interfaces.
+Check out the specification for details on [R2DBC Driver Compliance](/spec/0.9.0.RELEASE/spec/html/#compliance).
 
 There are other parts to implement, but this is the core.
 
@@ -59,6 +59,4 @@ R2DBC also has a suite of test cases to verify your driver's support. Your data 
 * **Group** `io.r2dbc`
 * **Artifact** `r2dbc-spi-test`
 
-To run all of the expected tests, write an implementation of the TCK's `TestKit<T>` test.
-
-See the [example in r2dbc-postgresql](https://github.com/r2dbc/r2dbc-postgresql/blob/main/src/test/java/io/r2dbc/postgresql/PostgresqlTestKit.java) to read the full source.
+To run all of the expected tests, write an implementation of the TCK's `TestKit` test.
