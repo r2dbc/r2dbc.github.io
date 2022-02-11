@@ -12,7 +12,7 @@ If you're eager to start using R2DBC to build an application, check out the [exi
 
 * [r2dbc-client](https://github.com/r2dbc/r2dbc-client) - client using pure Reactor (i.e. no Spring dependencies).
 * [spring-data-r2dbc](https://github.com/spring-projects/spring-data-r2dbc) - Spring Data client for R2DBC.
-* [Kotysa](https://github.com/pull-vert/kotysa) - Typesafe and Co-routine-ready SQL engine using Kotlin.
+* [Kotysa](https://github.com/ufoss-org/kotysa) - Typesafe and Co-routine-ready SQL engine using Kotlin.
 * [jOOQ](https://www.jooq.org/doc/3.13/manual/sql-execution/fetching/reactive-fetching/) - a fluent API for typesafe SQL query construction library.
 * [Testcontainers](https://www.testcontainers.org/modules/databases/r2dbc/) - support to connect and bootstrap a database in a Testcontainer.
 
