@@ -15,6 +15,7 @@ If you're eager to start using R2DBC to build an application, check out the [exi
 * [Kotysa](https://github.com/ufoss-org/kotysa) - Typesafe and Co-routine-ready SQL engine using Kotlin.
 * [jOOQ](https://www.jooq.org/doc/3.13/manual/sql-execution/fetching/reactive-fetching/) - a fluent API for typesafe SQL query construction library.
 * [Testcontainers](https://www.testcontainers.org/modules/databases/r2dbc/) - support to connect and bootstrap a database in a Testcontainer.
+* [Komapper](https://github.com/komapper/komapper) - Kotlin ORM for JDBC and R2DBC.
 
 ## Client Development Under Investigation
 
