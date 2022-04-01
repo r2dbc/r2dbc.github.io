@@ -17,7 +17,7 @@ Specifically, this release train ships with:
 * `org.mariadb:r2dbc-mariadb:1.1.1-rc` - [MariaDB R2DBC connector 1.1.1-rc](https://github.com/mariadb-corporation/mariadb-connector-r2dbc)
 * `com.oracle.database.r2dbc:oracle-r2dbc:0.4.0` - [Oracle R2DBC driver 0.4.0](https://github.com/oracle/oracle-r2dbc/releases/tag/0.4.0)
 * `io.r2dbc:r2dbc-pool:0.9.0.RELEASE` - [R2DBC Pool 0.9.0.RELEASE](https://github.com/r2dbc/r2dbc-pool/releases/tag/v0.9.0.RELEASE)
-* `org.postgresql:r2dbc-postgres:0.9.0.RELEASE` - [R2DBC Postgres driver 0.9.0.RELEASE](https://github.com/pgjdbc/r2dbc-postgresql/releases/tag/v0.9.0.RELEASE)
+* `org.postgresql:r2dbc-postgresql:0.9.0.RELEASE` - [R2DBC Postgres driver 0.9.0.RELEASE](https://github.com/pgjdbc/r2dbc-postgresql/releases/tag/v0.9.0.RELEASE)
 * `io.r2dbc:r2dbc-proxy:0.9.0.RELEASE` - [R2DBC Proxy 0.9.0.RELEASE](https://github.com/r2dbc/r2dbc-proxy/releases/tag/v0.9.0.RELEASE)
 * `io.r2dbc:r2dbc-mssql:0.9.0.RELEASE` - [R2DBC SQL Server driver 0.9.0.RELEASE](https://github.com/r2dbc/r2dbc-mssql/releases/tag/v0.9.0.RELEASE)
 
