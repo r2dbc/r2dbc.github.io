@@ -62,44 +62,10 @@ permalink: /resources/
 
 # Monthly Calls
 
-The R2DBC working group meets on the 1st Friday of each month at 6:30 AM PT (USA Pacific) / 9:30 AM ET (USA Eastern) / 3:30PM CET (Central European) time. 
-If you'd like to participate, join the call!
-Meeting minutes and preparation material are available on the [mailing list](https://groups.google.com/forum/#!forum/r2dbc).
+You can find the archive of our monthly calls at:
 
-Join using your computer or smartphone via:
-
-[https://zoom.us/j/97336955603?pwd=VWZTWmZib01YRXlTVzVIVkxIZ05Kdz09](https://zoom.us/j/97336955603?pwd=VWZTWmZib01YRXlTVzVIVkxIZ05Kdz09)
-
-Meeting ID: 973 3695 5603
-Pass code: 234867
-
-Or telephone:
-
-**Germany**
-
-* +49 (0) 69 8088 3899 Germany
-* +49 800 724 3138 Germany Toll Free
-
-**USA**
-
-* +1 646 558 8656 (US Toll) or +1 408 638 0968 (US Toll)
-* +1 855 880 1246 (US Toll Free) +1 877 369 0926 (US Toll Free)
-
-**UK**
-
-* +44 203 695 0088 UK and North Ireland
-* +44 800 031 5717 UK and North Ireland Toll Free
-
-**France**
-
-* +33 (0) 7 5678 4048 France
-* +33 8 0508 2588 France Toll Free
-
-Other international numbers available: [https://zoom.us/zoomconference](https://zoom.us/zoomconference)
-
-Here is a link to a [World Time Zone Converter](https://www.thetimezoneconverter.com/?t=6:30%20a.m.%20&tz=San%20Francisco).
-
-NOTE: Please use `*6` to mute/un-mute your phone during the call.
+* Agenda document: [https://docs.google.com/document/d/19N3ihwRMKeeGZNK3A13z0xHD2aWg29BHm0LFdBplryg](https://docs.google.com/document/d/19N3ihwRMKeeGZNK3A13z0xHD2aWg29BHm0LFdBplryg)
+* Meeting Minutes (via the Mailing List): [https://groups.google.com/g/r2dbc/search?q=meeting%20minutes](https://groups.google.com/g/r2dbc/search?q=meeting%20minutes)
 
 # Other
 
