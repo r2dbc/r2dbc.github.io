@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "R2CBC Borca-RELEASE released"
+title:  "R2DBC Borca-RELEASE released"
 date:   2022-02-04 08:00:00 +0200
 tags: [release]
 author: Mark Paluch
