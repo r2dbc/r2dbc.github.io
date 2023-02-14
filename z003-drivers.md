@@ -21,6 +21,7 @@ To ease implementation, R2DBC also provides a test interface (a veritable TCK) t
 
 R2DBC drivers implement the SPI listed above. The ones currently supported include:
 
+* [clickhouse-r2dbc](https://github.com/ClickHouse/clickhouse-java/tree/main/clickhouse-r2dbc) - R2DBC wrapper of async Java client for ClickHouse.
 * [cloud-spanner-r2dbc](https://github.com/GoogleCloudPlatform/cloud-spanner-r2dbc) - driver for Google Cloud Spanner.
 * [jasync-sql](https://github.com/jasync-sql/jasync-sql) - R2DBC wrapper for Java & Kotlin Async Database Driver for MySQL and PostgreSQL (written in Kotlin).
 * [oracle-r2dbc](https://github.com/oracle/oracle-r2dbc) - native driver implemented for Oracle.
