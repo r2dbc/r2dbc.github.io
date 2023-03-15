@@ -28,7 +28,7 @@ R2DBC drivers implement the SPI listed above. The ones currently supported inclu
 * [r2dbc-h2](https://github.com/r2dbc/r2dbc-h2) - native driver implemented for H2 as a test database.
 * [r2dbc-mariadb](https://github.com/mariadb-corporation/mariadb-connector-r2dbc) - native driver implemented for MariaDB.
 * [r2dbc-mssql](https://github.com/r2dbc/r2dbc-mssql) - native driver implemented for Microsoft SQL Server.
-* [r2dbc-mysql](https://github.com/mirromutth/r2dbc-mysql) - native driver implemented for MySQL.
+* [r2dbc-mysql](https://github.com/asyncer-io/r2dbc-mysql) - native driver implemented for MySQL (previously [mirromutth/r2dbc-mysql](https://github.com/mirromutth/r2dbc-mysql)).
 * [r2dbc-postgresql](https://github.com/pgjdbc/r2dbc-postgresql) - native driver implemented for PostgreSQL.
 
 # Connection Pooling
