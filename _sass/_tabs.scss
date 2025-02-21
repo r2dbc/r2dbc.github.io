@@ -1,5 +1,6 @@
 .tab_links {
-  margin-left: 0px;
+  margin: 4px -34px 5px 0;
+  display: inline-block;
 }
 
 .tab_links li {
@@ -7,9 +8,13 @@
   list-style: none;
   float: left;
   margin-right: 3px;
-  padding: 10px 40px;
+  padding: 10px 48px;
   background: $header-color;
   color: $brand-color;
+}
+
+.tab_links li#tab4 {
+  margin-right: 0;
 }
 
 .tab_links li:hover {
