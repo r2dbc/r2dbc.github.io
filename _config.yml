@@ -14,6 +14,6 @@ baseurl: "" # the subpath of your site, e.g. /blog
 url: "https://r2dbc.github.io" # the base hostname & protocol for your site
 twitter_username: r2dbc
 github_username:  r2dbc
-
+include: [".well-known"]
 # Build settings
 markdown: kramdown
